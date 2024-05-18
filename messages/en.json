@@ -1,0 +1,14 @@
+{
+    "IntroSection": {
+        "hello_im": "Hi, my name is",
+        "name": "Mystic_Stars",
+        "short_intro": "",
+        "download_cv": "Visit My Blog"
+    },
+    "SectionName": {
+        "about": "About me",
+        "experience": "Experience",
+        "projects": "Projects",
+        "skills": "Skills"
+    }
+}
