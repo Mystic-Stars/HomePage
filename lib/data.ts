@@ -2,6 +2,7 @@ import React from "react";
 import { FaReact } from "react-icons/fa";
 import GHS from "@/public/GHS.png";
 import Blog from "@/public/blog.png";
+import TimeX from "@/public/TimeX.png
 
 
 export const links = [
@@ -60,6 +61,17 @@ export const projectsData = [
         imageUrl: GHS,
         projectUrl: 'https://github.com/Mystic-stars/GHS',
         demoUrl: 'https://www.ghs.red',
+    },
+    {
+        title: "TimeX",
+        title_zh: '星星图册——由TimeX驱动',
+        description:
+            "A concise, efficient, and visually appealing photo blog platform.",
+        desc_zh: "TimeX是一款简洁、高效、美观的基于Typecho的照片博客主题。",
+        tags: ["Typecho", "PHP", "CSS"],
+        imageUrl: TimeX,
+        projectUrl: 'https://github.com/Mystic-stars/TimeX',
+        demoUrl: 'https://plog.mysticstars.cn',
     },
 
 
