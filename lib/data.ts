@@ -2,7 +2,7 @@ import React from "react";
 import { FaReact } from "react-icons/fa";
 import GHS from "@/public/GHS.png";
 import Blog from "@/public/blog.png";
-import TimeX from "@/public/TimeX.png";
+import TimeX from "@/public/TimeX.webp";
 
 
 export const links = [
