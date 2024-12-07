@@ -82,22 +82,17 @@ export default function Intro() {
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="col-span-8 place-self-center text-center sm:text-left justify-self-start"
+          className="place-self-center text-center"
         >
-          <h1 className="text-center text-4xl font-bold tracking-tight  sm:text-5xl">
+          <h1 className="text-center text-4xl font-bold tracking-tight sm:text-5xl mb-4">
             {t("name")}
           </h1>
 
-          <div className="text-center">
-            <span
-              className={`${sourceCodePro.className} text-sm tracking-wider`}
-            >
+          <div className="text-center flex flex-col items-center justify-center">
+            <span className={`${sourceCodePro.className} text-sm tracking-wider mb-2`}>
               I&apos;m a{" "}
             </span>
-            <h2
-              id="name"
-              className=" text-center  text-2xl  sm:text-5xl lg:text-4xl lg:leading-normal font-extrabold"
-            >
+            <h2 className="text-2xl sm:text-4xl lg:text-3xl font-extrabold">
               <TypeAnimation
                 sequence={[
                   "Minecraft Player",

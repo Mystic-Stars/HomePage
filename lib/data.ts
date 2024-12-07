@@ -73,9 +73,6 @@ export const projectsData = [
         projectUrl: 'https://github.com/Mystic-stars/TimeX',
         demoUrl: 'https://plog.mysticstars.cn',
     },
-
-
-
 ]
 
 export const skillsData = [
