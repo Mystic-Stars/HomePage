@@ -5,7 +5,7 @@ import { headerLanguageMap, skillsData } from "@/lib/data"
 import { useSectionInView } from "@/lib/hooks"
 import { motion } from "framer-motion"
 import SectionHeading from "./SectionHeading"
-import { useLocale } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { FaPython } from "react-icons/fa";
 import { BiLogoGit } from "react-icons/bi";
 import { FaGithub, FaCode } from "react-icons/fa6";
@@ -27,18 +27,20 @@ const fadeInAnimationVariants = {
 }
 
 const skillsWithIcons = [
-  { name: "Python", icon: <FaPython className="text-xl" />, desc: "熟悉Python编程" },
-  { name: "Web", icon: <FaCode className="text-xl" />, desc: "Web开发" },
-  { name: "Git", icon: <BiLogoGit className="text-xl" />, desc: "版本控制" },
-  { name: "Github", icon: <FaGithub className="text-xl" />, desc: "代码托管" },
-  { name: "Minecraft", icon: <SiMinecraft className="text-xl" />, desc: "游戏开发" },
-  { name: "Scratch", icon: <SiScratch className="text-xl" />, desc: "图形化编程" },
+  { name: "Python", icon: <FaPython className="text-xl" /> },
+  { name: "Web", icon: <FaCode className="text-xl" /> },
+  { name: "Git", icon: <BiLogoGit className="text-xl" /> },
+  { name: "Github", icon: <FaGithub className="text-xl" /> },
+  { name: "Minecraft", icon: <SiMinecraft className="text-xl" /> },
+  { name: "Scratch", icon: <SiScratch className="text-xl" /> },
 ];
 
 export default function Skills() {
   const { ref } = useSectionInView("Skills")
   const activeLocale = useLocale()
   const [playPop] = useSound("/bubble.wav", { volume: 0.5 });
+  const t = useTranslations("SkillSection");
+  const sectionLan = useTranslations("SectionName");
 
   return (
     <section
@@ -85,7 +87,7 @@ export default function Skills() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2 }}
             >
-              {skill.desc}
+              {t(skill.name)}
               <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
             </motion.div>
           </motion.li>

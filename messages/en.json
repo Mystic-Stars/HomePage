@@ -9,6 +9,20 @@
         "about": "About me",
         "experience": "Experience",
         "projects": "Projects",
-        "skills": "Skills"
+        "skills": "Skills",
+        "subscribe": "Subscribe"
+    },
+    "SkillSection": {
+        "Python": "Python Programming",
+        "Web": "Web Development",
+        "Git": "Version Control",
+        "Github": "Code Hosting",
+        "Minecraft": "Game Development",
+        "Scratch": "Visual Programming"
+    },
+    "ProjectSection": {
+        "view_all": "View All Projects",
+        "code": "View Code",
+        "visit": "Live Demo"
     }
 }

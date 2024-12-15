@@ -9,9 +9,23 @@
         "about": "关于我",
         "experience": "我的经历",
         "projects": "我的项目",
-        "skills": "我的技能"
+        "skills": "我的技能",
+        "subscribe": "订阅"
     },
     "AboutSection": {
         "desc": "你好，🙋‍♂️我是一名来自中国的学生，现在正在成都学习📚。 我热爱编程💻，熟悉Python等编程语言，也热衷于网站开发。你可以通过上方按钮访问我的博客🌐，在那里，我会分享更多有关我自己的故事及更多技术内容。 我喜欢游玩Minecraft🎮，我的游戏名称是：Mystic_Stars，我游玩生存，小游戏以及PVP。我也是一名二次元爱好者🌸，在我的博客里面记录了我看过的和喜欢的番剧📺。 如果你想了解更多有关我的内容，可以通过上方按钮访问我的Bilibili频道📽️和Github主页💾，或者致邮📮1278347583@qq.com。"
+    },
+    "SkillSection": {
+        "Python": "熟悉Python编程",
+        "Web": "Web开发",
+        "Git": "版本控制",
+        "Github": "代码托管",
+        "Minecraft": "游戏开发",
+        "Scratch": "图形化编程"
+    },
+    "ProjectSection": {
+        "view_all": "查看所有项目",
+        "code": "查看代码",
+        "visit": "在线演示"
     }
 }

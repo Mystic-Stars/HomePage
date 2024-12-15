@@ -6,6 +6,7 @@ import Skills from "@/components/Skills"
 // import Experience from "@/components/Experience"
 import { isMobileDevice } from "@/lib/utils"
 // import Contact from "@/components/Contact"
+import Subscribe from "@/components/Subscribe"
 
 export const metadata = {
   title: "MysticStars | Homepage",
@@ -22,6 +23,7 @@ export default function Home() {
       <About />
       <Projects />
       <Skills />
+      <Subscribe />
       {/* <Experience isMobile={isMobile} /> */}      
       {/* <Contact /> */}
     </main>
