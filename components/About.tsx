@@ -68,12 +68,17 @@ type AboutCardType = {
   icon?: React.ElementType
   image?: string
   title?: string
-  content?: string
+  content: string
   size?: "small" | "medium" | "large"
   aspectRatio?: "square" | "wide" | "tall"
   priority?: "high" | "medium" | "low"
   accentColor?: string
   expandOnHover?: boolean
+} | {
+  type: "image"
+  image: string
+  accentColor?: string
+  content?: string  // 图片类型时 content 可选
 }
 
 const AboutCard = ({ 
@@ -412,15 +417,15 @@ export default function About() {
             <ImageCard
               key={index}
               index={index}
-              image={card.image}
+              image={card.image || ""}
               accentColor={card.accentColor}
             />
           ) : (
             <AboutCard
               key={index}
-              icon={card.icon}
+              icon={card.icon || FaCode}
               title={card.title}
-              content={card.content}
+              content={card.content!}
               index={index}
               size={card.size}
               expandOnHover={card.expandOnHover}
