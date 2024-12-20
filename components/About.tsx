@@ -229,8 +229,8 @@ const GithubStatsCard = ({ index }: { index: number }) => (
     viewport={{ once: true, margin: "-50px" }}
     custom={index}
     className="
-      col-span-2 row-span-1
-      bg-white/90 dark:bg-gray-800/90
+      col-span-2 row-span-2
+      bg-[#161B22]/95
       rounded-2xl p-5
       shadow-[0_4px_20px_rgb(0,0,0,0.03)]
       border border-white/8 dark:border-gray-700/15
@@ -241,41 +241,40 @@ const GithubStatsCard = ({ index }: { index: number }) => (
       relative
     "
   >
-    <div className="relative">
+    <div className="relative h-full flex flex-col">
       <Link 
         href="https://github.com/Mystic-Stars" 
         target="_blank"
-        className="flex items-center gap-3 justify-center mb-5 group/link"
+        className="flex items-center gap-3 mb-4"
       >
         <div className="
-          bg-gradient-to-br from-pink/10 via-pink/8 to-pink/5
-          dark:from-pink/20 dark:via-pink/15 dark:to-pink/10
+          bg-gradient-to-br from-pink/20 via-pink/15 to-pink/10
           p-3 rounded-xl
           transition-all duration-200
           backdrop-blur-md
-          border border-white/10 dark:border-white/5
+          border border-white/10
         ">
-          <FaGithub className="w-7 h-7 text-pink dark:text-pink transition-all duration-300" />
+          <FaGithub className="w-7 h-7 text-pink transition-all duration-300" />
         </div>
-        <span className="text-lg font-medium bg-gradient-to-br from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
-          GitHub Activity
+        <span className="text-lg font-medium text-white/90">
+          GitHub Contributions
         </span>
       </Link>
       <div className="
-        bg-white/95 dark:bg-gray-800/95
-        rounded-xl p-4
-        shadow-[0_4px_15px_rgb(0,0,0,0.02)]
+        flex-1
+        rounded-xl
         transition-all duration-300
-        backdrop-blur-md
-        border border-white/10 dark:border-white/5
+        overflow-hidden
+        flex items-center justify-center
+        relative
       ">
-        <div className="relative overflow-hidden rounded-lg bg-[#161B22] aspect-[2/1]">
-          <img
-            src="https://raw.githubusercontent.com/Mystic-Stars/Mystic-Stars/output/github-contribution-grid-snake-dark.svg"
-            alt="GitHub Contribution Snake Animation"
-            className="w-full h-full object-cover"
-          />
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#161B22] via-transparent to-transparent z-10 pointer-events-none opacity-50" />
+        <div className="absolute inset-0 bg-gradient-to-l from-[#161B22] via-transparent to-transparent z-10 pointer-events-none opacity-50" />
+        <img
+          src="https://raw.githubusercontent.com/Mystic-Stars/HomePage/output/github-contribution-grid-snake-dark.svg"
+          alt="GitHub Contribution Snake Animation"
+          className="w-full h-auto object-contain"
+        />
       </div>
     </div>
   </motion.div>
