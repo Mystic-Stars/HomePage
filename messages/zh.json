@@ -15,6 +15,17 @@
     "AboutSection": {
         "desc": "你好，🙋‍♂️我是一名来自中国的学生，现在正在成都学习📚。 我热爱编程💻，熟悉Python等编程语言，也热衷于网站开发。你可以通过上方按钮访问我的博客🌐，在那里，我会分享更多有关我自己的故事及更多技术内容。 我喜欢游玩Minecraft🎮，我的游戏名称是：Mystic_Stars，我游玩生存，小游戏以及PVP。我也是一名二次元爱好者🌸，在我的博客里面记录了我看过的和喜欢的番剧📺。 如果你想了解更多有关我的内容，可以通过上方按钮访问我的Bilibili频道📽️和Github主页💾，或者致邮📮1278347583@qq.com。"
     },
+    "MBTISection": {
+        "title": "主人公",
+        "personality_traits": "性格特征：",
+        "traits": {
+            "trait1": "充满魅力的领导者",
+            "trait2": "天生的教导者",
+            "trait3": "富有同理心",
+            "trait4": "值得信赖的理想主义者"
+        },
+        "learn_more": "在 16personalities 了解更多关于主人公性格"
+    },
     "SkillSection": {
         "Python": "熟悉Python编程",
         "Web": "Web开发",
