@@ -1,16 +1,19 @@
 "use client"
 
 import React, { createContext, useContext, useEffect, useState } from "react"
+import { flushSync } from "react-dom"
 import useSound from "use-sound"
 import { useSoundContext } from "./sound-context"
 
 export type Theme = "system" | "light" | "dark"
 
+export type ThemeTransitionCoords = { x: number; y: number }
+
 type ThemeContextType = {
   theme: Theme
   resolvedTheme: "light" | "dark"
-  toggleTheme: () => void
-  setTheme: (theme: Theme) => void
+  toggleTheme: (coords?: ThemeTransitionCoords | React.MouseEvent) => void
+  setTheme: (theme: Theme, coords?: ThemeTransitionCoords | React.MouseEvent) => void
 }
 
 type ThemeContextProviderProp = {
@@ -72,10 +75,37 @@ const ThemeContextProvider = ({ children }: ThemeContextProviderProp) => {
     return () => mediaQuery.removeEventListener("change", handleSystemChange)
   }, [theme])
 
-  const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme)
-    window.localStorage.setItem("theme", newTheme)
+  const getCoords = (
+    coords?: ThemeTransitionCoords | React.MouseEvent
+  ): { x: number; y: number } => {
+    if (!coords) {
+      return {
+        x: typeof window !== "undefined" ? window.innerWidth - 48 : 0,
+        y: typeof window !== "undefined" ? window.innerHeight - 48 : 0,
+      }
+    }
 
+    if ("clientX" in coords && "clientY" in coords) {
+      const mouseEvent = coords as React.MouseEvent
+      if (mouseEvent.clientX !== 0 || mouseEvent.clientY !== 0) {
+        return { x: mouseEvent.clientX, y: mouseEvent.clientY }
+      }
+    }
+
+    if ("x" in coords && "y" in coords) {
+      return { x: coords.x, y: coords.y }
+    }
+
+    return {
+      x: typeof window !== "undefined" ? window.innerWidth - 48 : 0,
+      y: typeof window !== "undefined" ? window.innerHeight - 48 : 0,
+    }
+  }
+
+  const setTheme = (
+    newTheme: Theme,
+    coords?: ThemeTransitionCoords | React.MouseEvent
+  ) => {
     let nextResolved: "light" | "dark"
     if (newTheme === "system") {
       const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -84,8 +114,6 @@ const ThemeContextProvider = ({ children }: ThemeContextProviderProp) => {
       nextResolved = newTheme
     }
 
-    applyResolvedTheme(nextResolved)
-
     if (soundEnabled) {
       if (nextResolved === "dark") {
         playDark()
@@ -93,9 +121,70 @@ const ThemeContextProvider = ({ children }: ThemeContextProviderProp) => {
         playLight()
       }
     }
+
+    // If visual resolved theme is not changing (e.g. dark -> system when system is dark)
+    if (nextResolved === resolvedTheme) {
+      setThemeState(newTheme)
+      window.localStorage.setItem("theme", newTheme)
+      return
+    }
+
+    // Check View Transitions API support
+    const doc = document as any
+    const isAppearanceTransition =
+      typeof document !== "undefined" &&
+      typeof doc.startViewTransition === "function" &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
+    if (!isAppearanceTransition) {
+      setThemeState(newTheme)
+      window.localStorage.setItem("theme", newTheme)
+      applyResolvedTheme(nextResolved)
+      return
+    }
+
+    const { x, y } = getCoords(coords)
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    )
+
+    try {
+      const transition = doc.startViewTransition(() => {
+        flushSync(() => {
+          setThemeState(newTheme)
+          window.localStorage.setItem("theme", newTheme)
+          applyResolvedTheme(nextResolved)
+        })
+      })
+
+      if (transition && transition.ready) {
+        transition.ready.then(() => {
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+
+          document.documentElement.animate(
+            {
+              clipPath,
+            },
+            {
+              duration: 450,
+              easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+              pseudoElement: "::view-transition-new(root)",
+            }
+          )
+        }).catch(() => {})
+      }
+    } catch {
+      setThemeState(newTheme)
+      window.localStorage.setItem("theme", newTheme)
+      applyResolvedTheme(nextResolved)
+    }
   }
 
-  const toggleTheme = () => {
+  const toggleTheme = (coords?: ThemeTransitionCoords | React.MouseEvent) => {
     let nextTheme: Theme
     const systemIsDark = window.matchMedia("(prefers-color-scheme: dark)").matches
 
@@ -111,7 +200,7 @@ const ThemeContextProvider = ({ children }: ThemeContextProviderProp) => {
       nextTheme = systemIsDark ? "dark" : "system"
     }
 
-    setTheme(nextTheme)
+    setTheme(nextTheme, coords)
   }
 
   return (
