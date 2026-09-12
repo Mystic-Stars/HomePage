@@ -10,6 +10,7 @@
         "experience": "我的经历",
         "projects": "我的项目",
         "skills": "我的技能",
+        "blog": "博客精选",
         "subscribe": "订阅"
     },
     "AboutSection": {
@@ -113,6 +114,12 @@
         "copied": "已复制项目链接",
         "copy_link": "分享",
         "live_status": "实机在线"
+    },
+    "BlogSection": {
+        "title": "博客精选",
+        "subtitle": "在独立博客沉淀的思考随笔、技术教程与实践心得",
+        "read_more": "阅读全文",
+        "view_all": "前往博客查看全部文章"
     },
     "SubscribeSection": {
         "desc": "支持通过 Follow 信息流或任意标准 RSS 阅读器订阅我的博客内容。",

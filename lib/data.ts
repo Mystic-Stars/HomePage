@@ -25,6 +25,11 @@ export const links = [
         name_zh: "关于",
     },
     {
+        name: "Blog",
+        hash: "#blog",
+        name_zh: "博客",
+    },
+    {
         name: "Projects",
         hash: "#projects",
         name_zh: "项目",
@@ -51,9 +56,10 @@ export const links = [
 
 export const headerLanguageMap = {
     Home: '首页',
-    About: '关于我',
-    Projects: '我的项目',
-    Skills: '我的技能',
+    About: '关于',
+    Blog: '博客',
+    Projects: '项目',
+    Skills: '技能',
     Subscribe: '订阅',
 }
 

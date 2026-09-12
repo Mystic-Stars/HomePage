@@ -19,6 +19,7 @@ import {
   FiCornerDownLeft,
   FiHelpCircle,
   FiTerminal,
+  FiBookOpen,
 } from "react-icons/fi"
 import {
   FaHouse,
@@ -121,6 +122,18 @@ export default function CommandMenu({
           onClose()
         },
         keywords: ["about", "bio", "关于", "介绍", "mbti", "enfj"],
+      },
+      {
+        id: "nav-blog",
+        title: isZh ? "博客精选" : "Featured Posts",
+        subtitle: "#blog",
+        icon: <FiBookOpen className="w-3.5 h-3.5" />,
+        category: "navigation",
+        action: () => {
+          window.location.hash = "blog"
+          onClose()
+        },
+        keywords: ["blog", "posts", "articles", "博客", "文章", "acorn"],
       },
       {
         id: "nav-projects",
