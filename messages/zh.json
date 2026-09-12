@@ -80,6 +80,7 @@
         "creative": "兴趣与探索"
     },
     "ProjectSection": {
+        "subtitle": "精选开源项目与实践作品",
         "view_all": "查看所有项目",
         "code": "查看代码",
         "visit": "在线演示"

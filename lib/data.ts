@@ -1,8 +1,8 @@
 import React from "react";
 import { FaReact } from "react-icons/fa";
 import GHS from "@/public/GHS.png";
-import Blog from "@/public/blog.png";
-import TimeX from "@/public/TimeX.webp";
+import Axolotl from "@/public/Axolotl.webp";
+import Coverly from "@/public/Coverly.png";
 import { CgWorkAlt } from "react-icons/cg";
 import { LuGraduationCap } from "react-icons/lu";
 import { FaRss } from "react-icons/fa6";
@@ -58,38 +58,36 @@ export type ProjectTags = typeof projectsData[number]["tags"];
 
 export const projectsData = [
     {
-        title: "Mystic Stars Blog",
-        title_zh: "Mystic Stars Blog",
+        title: "Axolotl Launcher",
+        title_zh: "Axolotl Launcher",
         description:
-            `Welcome to my personal blog, where I will be sharing my code and articles. Feel free to explore and enjoy your visit! 
-            `,
-        desc_zh: "这是我的个人博客，我将在这里发布我的代码和文章，欢迎访问。",
-        tags: ["Web", "Halo", "Blog"],
-        imageUrl: Blog,
-        projectUrl: 'https://github.com/chengzhongxue/halo-theme-hao',
-        demoUrl: 'https://www.mysticstars.cn',
+            "Open-source, cross-platform next-generation launcher.\nYour last next launcher",
+        desc_zh: "开源，跨平台的下一代启动器\n你的最后一款启动器",
+        tags: ["Minecraft", "Tauri", "Rust"],
+        imageUrl: Axolotl,
+        projectUrl: 'https://github.com/Mystic-Stars/Axolotl',
+        demoUrl: 'https://axlmc.org',
     },
     {
-        title: "GHS 2024",
-        title_zh: 'GHS 2024',
+        title: "Coverly",
+        title_zh: "Coverly",
+        description:
+            "Lightweight, elegant cover design tool.\nMake cover creation simpler.",
+        desc_zh: "轻巧、优雅的封面设计工具\n让封面创作更简单",
+        tags: ["Next.js", "React", "Tailwind CSS"],
+        imageUrl: Coverly,
+        projectUrl: 'https://github.com/Mystic-Stars/Coverly',
+        demoUrl: 'https://cover.mysticstars.cn/',
+    },
+    {
+        title: "Garbage Human Studio",
+        title_zh: "Garbage Human Studio",
         description:
             "The official website of GHS.",
-        desc_zh: "GHS的官方网站。",
+        desc_zh: "GHS 官网",
         tags: ["Html", "Css", "Javascript"],
         imageUrl: GHS,
-        projectUrl: 'https://github.com/Mystic-stars/GHS',
         demoUrl: 'https://www.ghs.red',
-    },
-    {
-        title: "TimeX",
-        title_zh: '星星图册——由TimeX驱动',
-        description:
-            "A concise, efficient, and visually appealing photo blog platform.",
-        desc_zh: "TimeX是一款简洁、高效、美观的基于Typecho的照片博客主题。",
-        tags: ["Typecho", "PHP", "CSS"],
-        imageUrl: TimeX,
-        projectUrl: 'https://github.com/Mystic-stars/TimeX',
-        demoUrl: 'https://plog.mysticstars.cn',
     },
 ]
 
