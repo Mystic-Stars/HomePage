@@ -114,7 +114,7 @@ export default function Skills() {
     <section
       id="skills"
       ref={ref}
-      className="max-w-[53rem] scroll-mt-28 text-center mb-28"
+      className="max-w-[53rem] scroll-mt-28 text-center mb-16 sm:mb-28 px-2 sm:px-4"
     >
       <SectionHeading>
         {activeLocale === "zh"
@@ -122,30 +122,30 @@ export default function Skills() {
           : "My Skills"}
       </SectionHeading>
 
-      <div className="space-y-7">
+      <div className="space-y-6 sm:space-y-7">
         {skillCategories.map((category) => (
           <div key={category.id} className="flex flex-col items-center">
             {/* 极简分类小标签 */}
-            <div className="flex items-center gap-1.5 text-xs uppercase tracking-widest font-semibold text-gray-400 dark:text-gray-500 mb-3">
+            <div className="flex items-center gap-1.5 text-[11px] sm:text-xs uppercase tracking-widest font-semibold text-gray-400 dark:text-gray-500 mb-2.5 sm:mb-3">
               {category.icon}
               <span>{t(category.id)}</span>
             </div>
 
             {/* 纯净胶囊徽章流 */}
-            <ul className="flex flex-wrap justify-center gap-3 text-lg text-gray-800">
+            <ul className="flex flex-wrap justify-center gap-2 sm:gap-3 text-sm sm:text-lg text-gray-800">
               {category.skills.map((skill) => {
                 const itemIndex = runningIndex++
                 return (
                   <motion.li
                     key={skill.name}
-                    className="bg-white borderBlack rounded-xl px-5 py-3 dark:bg-white/10 dark:text-white/80 cursor-pointer select-none"
+                    className="bg-white borderBlack rounded-xl px-3.5 py-2 sm:px-5 sm:py-3 dark:bg-white/10 dark:text-white/80 cursor-pointer select-none active:scale-95 shadow-xs"
                     variants={fadeInAnimationVariants}
                     initial="initial"
                     whileInView="animate"
                     viewport={{ once: true }}
                     custom={itemIndex}
                     whileHover={{
-                      scale: 1.1,
+                      scale: 1.08,
                       rotate: [-1, 1, -1, 0],
                       transition: { duration: 0.2 },
                     }}
@@ -155,15 +155,20 @@ export default function Skills() {
                         playPop()
                       }
                     }}
+                    onTap={() => {
+                      if (soundEnabled) {
+                        playPop()
+                      }
+                    }}
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
                       <span
-                        className="text-xl"
+                        className="text-base sm:text-xl"
                         style={skill.color ? { color: skill.color } : undefined}
                       >
                         {skill.icon}
                       </span>
-                      <span className="text-base sm:text-lg">{skill.name}</span>
+                      <span className="text-xs sm:text-base font-medium">{skill.name}</span>
                     </div>
                   </motion.li>
                 )

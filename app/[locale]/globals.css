@@ -23,3 +23,16 @@
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 }
+
+/* Mobile-specific enhancements */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Touch-friendly scrolling */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+

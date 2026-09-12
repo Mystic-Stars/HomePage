@@ -41,7 +41,7 @@ const cardEntranceVariants = {
 }
 
 const cardBaseStyle =
-  "group relative rounded-3xl p-5 sm:p-6 bg-white/70 dark:bg-gray-900/50 backdrop-blur-md border border-gray-200/80 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] transition-all duration-200 ease-out hover:-translate-y-1 overflow-hidden flex flex-col justify-between"
+  "group relative rounded-2xl sm:rounded-3xl p-4 sm:p-6 bg-white/70 dark:bg-gray-900/50 backdrop-blur-md border border-gray-200/80 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] transition-all duration-200 ease-out active:scale-[0.99] hover:-translate-y-0.5 overflow-hidden flex flex-col justify-between"
 
 export default function About() {
   const { ref } = useSectionInView("About")
@@ -82,7 +82,7 @@ export default function About() {
   return (
     <motion.section
       ref={ref}
-      className="mb-28 max-w-[65rem] scroll-mt-28 px-4 w-full"
+      className="mb-16 sm:mb-28 max-w-[65rem] scroll-mt-28 px-2 sm:px-4 w-full"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
@@ -91,7 +91,7 @@ export default function About() {
     >
       <SectionHeading>{sectionLan("about")}</SectionHeading>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 auto-rows-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 auto-rows-auto">
         {/* ================= CARD 1: Hero Bio (2x2 on desktop) ================= */}
         <motion.div
           variants={cardEntranceVariants}
@@ -283,7 +283,7 @@ export default function About() {
           whileInView="animate"
           viewport={{ once: true }}
           custom={2}
-          className={`${cardBaseStyle} p-5 sm:p-5 col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1`}
+          className={`${cardBaseStyle} col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1`}
         >
           <div className="flex items-start justify-between gap-2">
             <div>
@@ -319,7 +319,7 @@ export default function About() {
           whileInView="animate"
           viewport={{ once: true }}
           custom={3}
-          className={`${cardBaseStyle} p-5 sm:p-5 col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1`}
+          className={`${cardBaseStyle} col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1`}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5 min-w-0">
@@ -408,7 +408,7 @@ export default function About() {
           whileInView="animate"
           viewport={{ once: true }}
           custom={5}
-          className={`${cardBaseStyle} p-5 sm:p-5 col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1 relative overflow-hidden`}
+          className={`${cardBaseStyle} col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1 relative overflow-hidden`}
         >
           <div>
             <div className="flex items-center justify-between gap-2 mb-3 relative z-10">
@@ -464,7 +464,7 @@ export default function About() {
           </div>
 
           {/* User Requested Minecraft Logo Watermark */}
-          <div className="absolute right-[-6px] bottom-3.5 w-36 sm:w-40 pointer-events-none opacity-15 dark:opacity-10 z-0">
+          <div className="absolute right-[-6px] bottom-3.5 w-36 sm:w-40 pointer-events-none opacity-15 dark:opacity-10 z-0 select-none">
             <Image
               src="/minecraft-logo.png"
               alt="Minecraft Logo"
@@ -482,7 +482,7 @@ export default function About() {
           whileInView="animate"
           viewport={{ once: true }}
           custom={6}
-          className={`${cardBaseStyle} p-5 sm:p-5 col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1 relative overflow-hidden`}
+          className={`${cardBaseStyle} col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1 relative overflow-hidden`}
         >
           <div>
             <div className="flex items-center justify-between gap-2 mb-3 relative z-10">

@@ -60,22 +60,22 @@ export default function Project({
     >
       <section
         onClick={handleCardClick}
-        className="relative rounded-3xl bg-white/70 dark:bg-gray-900/50 backdrop-blur-md border border-gray-200/80 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.07)] dark:hover:shadow-[0_12px_32px_rgba(0,0,0,0.35)] transition-all duration-300 ease-out overflow-hidden cursor-pointer sm:h-[21rem]"
+        className="relative rounded-2xl sm:rounded-3xl bg-white/70 dark:bg-gray-900/50 backdrop-blur-md border border-gray-200/80 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.07)] dark:hover:shadow-[0_12px_32px_rgba(0,0,0,0.35)] transition-all duration-300 ease-out overflow-hidden cursor-pointer sm:h-[21rem] active:scale-[0.99]"
       >
         {/* Mobile Preview Image */}
-        <div className="relative w-full h-44 overflow-hidden border-b border-gray-100 dark:border-gray-800 sm:hidden">
+        <div className="relative w-full aspect-[16/9] overflow-hidden border-b border-gray-100 dark:border-gray-800 sm:hidden">
           <Image
             src={imageUrl}
             alt={activeLocale === "zh" ? title_zh : title}
             fill
             className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-            sizes="100vw"
+            sizes="(max-width: 640px) 100vw, 50vw"
           />
         </div>
 
         {/* Text & Content Container */}
         <div
-          className={`p-6 sm:p-8 flex flex-col justify-between h-full relative z-10 ${
+          className={`p-5 sm:p-8 flex flex-col justify-between h-full relative z-10 ${
             isEven ? "sm:ml-auto sm:max-w-[50%]" : "sm:max-w-[50%]"
           }`}
         >
@@ -97,7 +97,7 @@ export default function Project({
                 <Link
                   href={demoUrl}
                   target="_blank"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 active:scale-[0.98] transition-all shadow-xs"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 sm:py-1.5 rounded-xl text-xs font-medium bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 active:scale-95 transition-all shadow-xs"
                 >
                   <span>{t("visit")}</span>
                   <FiArrowUpRight className="w-3.5 h-3.5" />
@@ -108,7 +108,7 @@ export default function Project({
                 <Link
                   href={projectUrl}
                   target="_blank"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-200/60 dark:border-gray-700/60 active:scale-[0.98] transition-all"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 sm:py-1.5 rounded-xl text-xs font-medium bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-200/60 dark:border-gray-700/60 active:scale-95 transition-all"
                 >
                   <FaGithub className="w-3.5 h-3.5" />
                   <span>{t("code")}</span>

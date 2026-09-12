@@ -53,7 +53,7 @@ export default function Subscribe() {
     <section
       id="subscribe"
       ref={ref}
-      className="max-w-[45rem] w-full scroll-mt-28 mb-28 px-4"
+      className="max-w-[45rem] w-full scroll-mt-28 mb-16 sm:mb-28 px-2 sm:px-4"
     >
       <SectionHeading>
         {activeLocale === "zh"
@@ -61,7 +61,7 @@ export default function Subscribe() {
           : "Subscribe"}
       </SectionHeading>
 
-      <p className="text-sm text-gray-500 dark:text-gray-400 text-center -mt-4 mb-7 max-w-md mx-auto">
+      <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 text-center -mt-4 mb-7 max-w-md mx-auto">
         {t("desc")}
       </p>
 
@@ -71,7 +71,7 @@ export default function Subscribe() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-        className="rounded-3xl p-5 sm:p-6 bg-white/70 dark:bg-gray-900/50 backdrop-blur-md border border-gray-200/80 dark:border-gray-800 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] transition-all duration-200"
+        className="rounded-2xl sm:rounded-3xl p-4 sm:p-6 bg-white/70 dark:bg-gray-900/50 backdrop-blur-md border border-gray-200/80 dark:border-gray-800 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] transition-all duration-200"
       >
         <div className="flex flex-col gap-4">
           {/* Follow 订阅项 */}
@@ -94,7 +94,7 @@ export default function Subscribe() {
               href={FOLLOW_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-1.5 py-2 px-4 rounded-xl text-xs font-medium bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:opacity-90 active:scale-[0.98] transition-all duration-150 shrink-0 cursor-pointer"
+              className="inline-flex items-center justify-center gap-1.5 py-2.5 sm:py-2 px-4 rounded-xl text-xs font-medium bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:opacity-90 active:scale-95 transition-all duration-150 w-full sm:w-auto shrink-0 cursor-pointer"
             >
               <span>{t("follow_btn")}</span>
               <FiArrowUpRight className="w-3.5 h-3.5" />
@@ -117,10 +117,10 @@ export default function Subscribe() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
               <button
                 onClick={handleCopyRSS}
-                className="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-medium bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 active:scale-[0.98] transition-all duration-150 cursor-pointer"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 py-2.5 sm:py-2 px-3.5 rounded-xl text-xs font-medium bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 active:scale-95 transition-all duration-150 cursor-pointer"
               >
                 {copied ? (
                   <FiCheck className="w-3.5 h-3.5 text-emerald-500" />
@@ -134,7 +134,7 @@ export default function Subscribe() {
                 href={RSS_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center p-2 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 active:scale-[0.98] transition-all duration-150"
+                className="inline-flex items-center justify-center p-2.5 sm:p-2 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 active:scale-95 transition-all duration-150"
                 aria-label="Open RSS XML"
               >
                 <FiExternalLink className="w-3.5 h-3.5" />

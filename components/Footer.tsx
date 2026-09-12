@@ -2,7 +2,7 @@ import React from "react"
 
 export default function Footer() {
   return (
-    <footer className="mb-10 px-4 text-center text-gray-500">
+    <footer className="mb-12 sm:mb-10 px-4 text-center text-gray-500 pb-[env(safe-area-inset-bottom)] max-w-md mx-auto text-xs leading-relaxed">
       <small className="mb-2 block text-xs" suppressHydrationWarning>
         &copy; {new Date().getFullYear()} Mystic_Stars.
       </small>

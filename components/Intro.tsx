@@ -32,7 +32,7 @@ export default function Intro() {
   return (
     <section
       ref={ref}
-      className="mb-10 max-w-[50rem] text-center sm:mb-0 scroll-mt-28 pt-[7rem]"
+      className="mb-14 max-w-[50rem] text-center sm:mb-0 scroll-mt-28 pt-24 sm:pt-[7rem]"
       id="home"
     >
       <div className="flex items-center justify-center">
@@ -49,7 +49,7 @@ export default function Intro() {
               height="250"
               quality="95"
               priority={true}
-              className="h-28 w-28 rounded-full object-cover border-[0.35rem] border-white shadow-xl"
+              className="h-24 w-24 sm:h-28 sm:w-28 rounded-full object-cover border-[0.35rem] border-white shadow-xl"
             />
           </motion.div>
           <motion.span
@@ -58,10 +58,16 @@ export default function Intro() {
                 playHover()
               }
             }}
+            onTap={() => {
+              if (soundEnabled) {
+                playHover()
+              }
+            }}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             whileHover={{ scale: 1.25, rotate: 15 }}
-            className="absolute text-4xl bottom-0 right-0 hover:rotate-2"
+            whileTap={{ scale: 1.25, rotate: 15 }}
+            className="absolute text-3xl sm:text-4xl bottom-0 right-0 cursor-pointer select-none"
             transition={{
               type: "spring",
               duration: 0.7,
@@ -73,29 +79,31 @@ export default function Intro() {
           </motion.span>
         </div>
       </div>
-      <motion.h1
-        className="mb-10 mt-4 px-4 text-2xl font-medium !leading-[1.5] sm:text-4xl"
+
+      <motion.div
+        className="mb-8 sm:mb-10 mt-4 px-4 text-2xl font-medium !leading-[1.5] sm:text-4xl"
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <span className={`${sourceCodePro.className} text-sm tracking-wider `}>
+        <span className={`${sourceCodePro.className} text-xs sm:text-sm tracking-wider text-gray-500 dark:text-gray-400 block mb-1`}>
           {t("hello_im")}
         </span>
+
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
           className="place-self-center text-center"
         >
-          <h1 className="text-center text-4xl font-bold tracking-tight sm:text-5xl mb-4">
+          <h1 className="text-center text-3xl sm:text-5xl font-bold tracking-tight mb-3 sm:mb-4 text-gray-900 dark:text-white">
             {t("name")}
           </h1>
 
           <div className="text-center flex flex-col items-center justify-center">
-            <span className={`${sourceCodePro.className} text-sm tracking-wider mb-2`}>
+            <span className={`${sourceCodePro.className} text-xs sm:text-sm tracking-wider mb-1.5 text-gray-500 dark:text-gray-400`}>
               I&apos;m a{" "}
             </span>
-            <h2 className="text-2xl sm:text-4xl lg:text-3xl font-extrabold">
+            <h2 className="text-xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">
               <TypeAnimation
                 sequence={[
                   "Minecraft Player",
@@ -110,50 +118,51 @@ export default function Intro() {
             </h2>
           </div>
         </motion.div>
-        <p>{t("short_intro")}</p>
-      </motion.h1>
+
+        <p className="mt-4 text-sm sm:text-base text-gray-600 dark:text-gray-300 font-normal max-w-md mx-auto">
+          {t("short_intro")}
+        </p>
+      </motion.div>
 
       <motion.div
-        className="flex flex-col sm:flex-row items-center justify-center  gap-3 px-4 text-lg font-medium"
+        className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 px-4 text-sm sm:text-base font-medium"
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
           delay: 0.1,
         }}
       >
-        {/* <Link
-          href="#contact"
-          onClick={() => {
-            setActiveSection("Contact")
-            setTimeOfLastClick(Date.now())
-          }}
-          className="group bg-gray-900 px-4 py-2 text-sm sm:text-lg text-white sm:px-7 sm:py-3 flex items-center gap-2  rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
-        >
-          Contact me here
-          <BsArrowRight className="opacity-70 group-hover:translate-x-1 transition" />
-        </Link> */}
         <a
           href="https://www.mysticstars.cn"
-          className="group text-sm  px-4 py-2  bg-white sm:text-lg sm:px-7 sm:py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10"
-        >
-          {t("download_cv")}
-          <FaPaperPlane />
-        </a>
-        <a
-          className="bg-white p-4 text-gray-700 hover:text-gray-950 flex items-center gap-2 rounded-full focus:scale-[1.15] hover:scale-[1.15] active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
-          href="https://space.bilibili.com/2007491365"
           target="_blank"
+          rel="noopener noreferrer"
+          className="group px-5 py-2.5 sm:px-6 sm:py-3 bg-gray-900 text-white dark:bg-white dark:text-gray-900 flex items-center gap-2 rounded-full outline-none focus:scale-105 hover:scale-105 active:scale-95 transition-all shadow-md cursor-pointer"
         >
-          <FaBilibili />
+          <span>{t("download_cv")}</span>
+          <FaPaperPlane className="text-xs group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
         </a>
 
-        <a
-          className="bg-white p-4 text-gray-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-gray-950 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
-          href="https://github.com/Mystic-stars"
-          target="_blank"
-        >
-          <FaGithubSquare />
-        </a>
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <a
+            className="bg-white p-2.5 sm:p-3 text-gray-700 hover:text-gray-950 flex items-center justify-center rounded-full focus:scale-110 hover:scale-110 active:scale-95 transition-all cursor-pointer border border-gray-200/80 dark:border-gray-700/80 dark:bg-white/10 dark:text-white/80 shadow-xs text-base sm:text-lg"
+            href="https://space.bilibili.com/2007491365"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Bilibili space"
+          >
+            <FaBilibili />
+          </a>
+
+          <a
+            className="bg-white p-2.5 sm:p-3 text-gray-700 flex items-center justify-center text-base sm:text-lg rounded-full focus:scale-110 hover:scale-110 hover:text-gray-950 active:scale-95 transition-all cursor-pointer border border-gray-200/80 dark:border-gray-700/80 dark:bg-white/10 dark:text-white/80 shadow-xs"
+            href="https://github.com/Mystic-stars"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub profile"
+          >
+            <FaGithubSquare />
+          </a>
+        </div>
       </motion.div>
     </section>
   )

@@ -20,7 +20,7 @@ export default function Projects() {
     <motion.section
       ref={ref}
       id="projects"
-      className="scroll-mt-28 mb-28 max-w-[50rem] w-full px-4"
+      className="scroll-mt-28 mb-16 sm:mb-28 max-w-[50rem] w-full px-2 sm:px-4"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}

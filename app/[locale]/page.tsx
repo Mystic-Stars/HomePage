@@ -25,7 +25,7 @@ export default function Home({
   unstable_setRequestLocale(locale)
 
   return (
-    <main className="flex flex-col items-center justify-center px-4 overflow-x-hidden">
+    <main className="flex flex-col items-center justify-center px-3 sm:px-4 w-full overflow-x-hidden">
       <Intro />
       <SectionDivider />
       <About />

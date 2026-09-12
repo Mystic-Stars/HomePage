@@ -645,7 +645,8 @@ export const GitHubActivity = ({
           <motion.div
             layout="position"
             transition={headerTransition}
-            className="flex items-center justify-between gap-3 py-2 px-3 sm:px-4"
+            onClick={toggle}
+            className="flex items-center justify-between gap-3 py-2 px-3 sm:px-4 cursor-pointer select-none"
           >
             <span className="truncate text-xs font-medium text-gray-700 dark:text-gray-300">
               {label}
@@ -668,13 +669,16 @@ export const GitHubActivity = ({
 
               <button
                 type="button"
-                onClick={toggle}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  toggle()
+                }}
                 aria-expanded={open}
                 aria-controls={`${uid}-panel`}
                 aria-label={
                   open ? "Hide top repositories" : "Show top repositories"
                 }
-                className="grid size-7 shrink-0 place-items-center rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                className="grid size-8 sm:size-7 shrink-0 place-items-center rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 active:scale-90 transition-all"
               >
                 <Chevron open={open} transition={transition} />
               </button>
