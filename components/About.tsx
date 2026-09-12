@@ -1,530 +1,646 @@
 "use client"
 
-import React from "react"
+import React, { useState, useEffect } from "react"
 import SectionHeading from "./SectionHeading"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { useSectionInView } from "@/lib/hooks"
-import { useLocale, useTranslations } from "next-intl"
-import { FaGamepad, FaCode, FaBook, FaEnvelope, FaGithub } from "react-icons/fa6"
-import { PiTelevisionSimpleFill } from "react-icons/pi"
-import { SiBilibili } from "react-icons/si"
+import { useTranslations } from "next-intl"
+import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
 
-const cardVariants = {
-  initial: {
-    opacity: 0,
-    y: 6,
-  },
-  animate: (index: number) => ({
+import {
+  FaGithub,
+  FaEnvelope,
+  FaBookBookmark,
+  FaCode,
+  FaTerminal,
+  FaShareNodes,
+} from "react-icons/fa6"
+import { SiBilibili } from "react-icons/si"
+import {
+  FiCopy,
+  FiCheck,
+  FiArrowUpRight,
+  FiClock,
+  FiSend,
+} from "react-icons/fi"
+import { PiTelevisionSimpleFill } from "react-icons/pi"
+import GitHubActivity from "@/components/ui/github-activity"
+
+const cardEntranceVariants = {
+  initial: { opacity: 0, y: 16 },
+  animate: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: {
-      delay: 0.03 * index,
-      duration: 0.25,
-      ease: [0.2, 0.05, 0.15, 1],
+      delay: 0.04 * i,
+      duration: 0.35,
+      ease: [0.22, 1, 0.36, 1],
     },
   }),
 }
 
-const contentVariants = {
-  initial: { 
-    opacity: 0,
-    y: -2,
-  },
-  animate: { 
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.15,
-      ease: [0.2, 0.05, 0.15, 1]
-    }
-  },
-  exit: { 
-    opacity: 0,
-    y: -2,
-    transition: {
-      duration: 0.15,
-      ease: [0.2, 0.05, 0.15, 1]
-    }
-  }
-}
-
-interface AboutCardProps {
-  icon: React.ElementType
-  content: string
-  title?: string
-  index: number
-  className?: string
-  size?: "small" | "medium" | "large"
-  expandOnHover?: boolean
-  aspectRatio?: "square" | "wide" | "tall"
-  priority?: "high" | "medium" | "low"
-  accentColor?: string
-  href?: string
-}
-
-type AboutCardType = {
-  type?: "image"
-  icon?: React.ElementType
-  image?: string
-  title?: string
-  content: string
-  size?: "small" | "medium" | "large"
-  aspectRatio?: "square" | "wide" | "tall"
-  priority?: "high" | "medium" | "low"
-  accentColor?: string
-  expandOnHover?: boolean
-  href?: string
-} | {
-  type: "image"
-  image: string
-  accentColor?: string
-  content?: string  // 图片类型时 content 可选
-}
-
-const AboutCard = ({ 
-  icon: Icon, 
-  content,
-  title,
-  index, 
-  className = "",
-  size = "medium",
-  expandOnHover = false,
-  aspectRatio = "square",
-  priority = "medium",
-  accentColor = "pink",
-  href = ""
-}: AboutCardProps) => {
-  const [isHovered, setIsHovered] = useState(false)
-  const CardWrapper = href ? (props: any) => (
-    <Link href={href} target="_blank" className="cursor-pointer no-underline" {...props} />
-  ) : motion.div
-
-  const sizeClasses = {
-    small: "col-span-2 sm:col-span-1 row-span-1",
-    medium: "col-span-2 sm:col-span-1 row-span-1",
-    large: "col-span-2 row-span-1"
-  }
-
-  const aspectRatioClasses = {
-    square: "aspect-square",
-    wide: "col-span-2 aspect-[2/1]",
-    tall: "row-span-2"
-  }
-
-  const priorityClasses = {
-    high: "bg-white/80 dark:bg-gray-800/80 border-l-4 border-l-pink dark:border-l-pink",
-    medium: "bg-white/80 dark:bg-gray-800/80",
-    low: "bg-white/70 dark:bg-gray-800/70"
-  }
-
-  const iconSizeClasses = {
-    small: "w-7 h-7 sm:w-8 sm:h-8",
-    medium: "w-7 h-7 sm:w-8 sm:h-8",
-    large: "w-8 h-8 sm:w-10 sm:h-10"
-  }
-
-  return (
-    <CardWrapper
-      {...(!href ? {
-        variants: cardVariants,
-        initial: "initial",
-        whileInView: "animate",
-        viewport: { once: true, margin: "-50px" },
-        custom: index,
-      } : {})}
-      onMouseEnter={() => !href && setIsHovered(true)}
-      onMouseLeave={() => !href && setIsHovered(false)}
-      className={`
-        ${priorityClasses[priority]}
-        rounded-2xl p-4 sm:p-5
-        shadow-[0_4px_20px_rgb(0,0,0,0.03)]
-        border border-white/8 dark:border-gray-700/15
-        transition-all duration-300
-        backdrop-blur-md
-        ${sizeClasses[size]}
-        ${aspectRatioClasses[aspectRatio]}
-        ${className}
-        ${!href ? 'group' : ''}
-        overflow-hidden
-        relative
-        bg-gradient-to-br from-white/90 via-white/85 to-white/80
-        dark:from-gray-800/90 dark:via-gray-800/85 dark:to-gray-800/80
-      `}
-    >
-      <div className="relative h-full flex flex-col">
-        <div className={`
-          flex items-center gap-4
-          ${expandOnHover ? 'justify-center w-full' : ''}
-          ${expandOnHover ? (isHovered ? 'h-12 mb-3' : 'h-full') : ''}
-          transition-all duration-200
-        `}>
-          <div className={`
-            bg-gradient-to-br from-${accentColor}/10 via-${accentColor}/8 to-${accentColor}/5
-            dark:from-${accentColor}/20 dark:via-${accentColor}/15 dark:to-${accentColor}/10
-            transition-all duration-200
-            rounded-xl
-            backdrop-blur-md
-            ${expandOnHover ? (
-              isHovered ? 'p-2.5 scale-95' : 'p-6 scale-100'
-            ) : 'p-3.5'}
-            group-hover:shadow-[0_4px_15px_rgb(0,0,0,0.03)]
-            group-hover:border-${accentColor}/10
-            border border-white/10 dark:border-white/5
-          `}>
-            <Icon className={`
-              text-${accentColor} dark:text-${accentColor}
-              transition-all duration-200
-              ${expandOnHover ? (
-                isHovered ? 'w-7 h-7' : 'w-12 h-12'
-              ) : iconSizeClasses[size]}
-              ${expandOnHover && isHovered ? 'rotate-0' : ''}
-              ${expandOnHover && !isHovered ? 'hover:rotate-3' : ''}
-              group-hover:filter group-hover:brightness-110
-              drop-shadow-sm
-            `} />
-          </div>
-          {title && !expandOnHover && (
-            <h3 className="text-base sm:text-lg font-medium bg-gradient-to-br from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
-              {title}
-            </h3>
-          )}
-        </div>
-        <AnimatePresence mode="wait">
-          {(!expandOnHover || isHovered) && (
-            <motion.div
-              variants={contentVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className={`
-                text-gray-600/90 dark:text-gray-300/90
-                ${size === "large" ? "text-sm sm:text-base" : "text-sm"}
-                leading-relaxed
-                ${expandOnHover ? 'text-center px-2 sm:px-3' : 'text-left'}
-                overflow-hidden
-              `}
-            >
-              {content}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </CardWrapper>
-  )
-}
-
-const GithubStatsCard = ({ index }: { index: number }) => (
-  <motion.div
-    variants={cardVariants}
-    initial="initial"
-    whileInView="animate"
-    viewport={{ once: true, margin: "-50px" }}
-    custom={index}
-    className="
-      col-span-2 row-span-2
-      bg-gradient-to-br from-white/90 via-white/85 to-white/80
-      dark:from-gray-800/90 dark:via-gray-800/85 dark:to-gray-800/80
-      rounded-2xl p-4 sm:p-5
-      shadow-[0_4px_20px_rgb(0,0,0,0.03)]
-      border border-white/8 dark:border-gray-700/15
-      transition-all duration-300
-      backdrop-blur-md
-      overflow-hidden
-      group
-      relative
-    "
-  >
-    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent dark:from-gray-800/20 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none" />
-    <div className="relative h-full flex flex-col">
-      <Link 
-        href="https://github.com/Mystic-Stars" 
-        target="_blank"
-        className="flex items-center gap-3 mb-4"
-      >
-        <div className="
-          bg-gradient-to-br from-pink/10 via-pink/8 to-pink/5
-          dark:from-pink/20 dark:via-pink/15 dark:to-pink/10
-          p-3 rounded-xl
-          transition-all duration-200
-          backdrop-blur-md
-          border border-white/10 dark:border-white/5
-          hover:scale-105 hover:shadow-sm
-        ">
-          <FaGithub className="w-7 h-7 text-pink dark:text-pink transition-transform duration-200 hover:rotate-[360deg]" />
-        </div>
-        <span className="text-lg font-medium bg-gradient-to-br from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
-          GitHub Contributions
-        </span>
-      </Link>
-      <div className="
-        flex-1
-        bg-gradient-to-br from-white/95 to-white/90
-        dark:from-gray-900/95 dark:to-gray-900/90
-        rounded-xl
-        transition-all duration-300
-        overflow-hidden
-        flex items-center justify-center
-        relative
-        border border-white/10 dark:border-white/5
-      ">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(255,255,255,0.1),rgba(255,255,255,0))] dark:bg-[radial-gradient(circle_at_50%_120%,rgba(0,0,0,0.1),rgba(0,0,0,0))]" />
-        <div className="w-full h-full p-4 sm:p-6">
-          <img
-            src="https://raw.githubusercontent.com/Mystic-Stars/Mystic-Stars/output/github-contribution-grid-snake-dark.svg"
-            alt="GitHub Contribution Snake Animation"
-            className="w-full h-full object-contain dark:invert dark:brightness-95 dark:contrast-125 transition-all duration-300"
-          />
-        </div>
-      </div>
-    </div>
-  </motion.div>
-)
-
-const MBTICard = ({ index }: { index: number }) => {
-  const activeLocale = useLocale()
-  const t = useTranslations('MBTISection')
-  
-  return (
-    <motion.div
-      variants={cardVariants}
-      initial="initial"
-      whileInView="animate"
-      viewport={{ once: true, margin: "-50px" }}
-      custom={index}
-      className="
-        col-span-2 row-span-2
-        bg-gradient-to-br from-white/90 via-white/85 to-white/80
-        dark:from-gray-800/90 dark:via-gray-800/85 dark:to-gray-800/80
-        rounded-2xl p-4 sm:p-5
-        shadow-[0_4px_20px_rgb(0,0,0,0.03)]
-        border border-white/8 dark:border-gray-700/15
-        transition-all duration-300
-        backdrop-blur-md
-        overflow-hidden
-        group
-        relative
-      "
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent dark:from-gray-800/20 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none" />
-      <div className="relative h-full flex flex-col">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="
-            bg-gradient-to-br from-emerald/10 via-emerald/8 to-emerald/5
-            dark:from-emerald/20 dark:via-emerald/15 dark:to-emerald/10
-            p-3 rounded-xl
-            transition-all duration-200
-            backdrop-blur-md
-            border border-white/10 dark:border-white/5
-          ">
-            <span className="text-lg font-bold text-emerald">ENFJ</span>
-          </div>
-          <span className="text-lg font-medium bg-gradient-to-br from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
-            {activeLocale === "zh" ? t("title") : "The Protagonist"}
-          </span>
-        </div>
-        <div className="
-          flex-1
-          bg-gradient-to-br from-white/95 to-white/90
-          dark:from-gray-900/95 dark:to-gray-900/90
-          rounded-xl
-          transition-all duration-300
-          overflow-hidden
-          relative
-          border border-white/10 dark:border-white/5
-          flex items-stretch
-        ">
-          <div className="flex-1 flex flex-col justify-center p-4 sm:p-6">
-            <div className="text-sm text-gray-600 dark:text-gray-300 text-left mb-2">
-              {activeLocale === "zh" ? t("personality_traits") : "Personality Traits:"}
-            </div>
-            <ul className="text-sm text-gray-500 dark:text-gray-400 text-left list-disc list-inside space-y-1">
-              <li>{activeLocale === "zh" ? t("traits.trait1") : "Charismatic Leader"}</li>
-              <li>{activeLocale === "zh" ? t("traits.trait2") : "Natural Teacher"}</li>
-              <li>{activeLocale === "zh" ? t("traits.trait3") : "Empathetic"}</li>
-              <li>{activeLocale === "zh" ? t("traits.trait4") : "Reliable Idealist"}</li>
-            </ul>
-          </div>
-          <div className="absolute right-0 w-[45%] z-20 flex items-end">
-            <img
-              src="/enfj.svg"
-              alt="ENFJ Personality"
-              className="w-full object-contain transition-all duration-300"
-              style={{
-                transform: 'scale(0.98)',
-                transformOrigin: 'bottom right'
-              }}
-            />
-          </div>
-        </div>
-        <Link 
-          href={activeLocale === "zh" 
-            ? "https://www.16personalities.com/ch/enfj-%E4%BA%BA%E6%A0%BC"
-            : "https://www.16personalities.com/enfj-personality"
-          }
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="text-sm text-gray-500 dark:text-gray-400 mt-3 hover:text-emerald dark:hover:text-emerald transition-colors duration-200"
-        >
-          {activeLocale === "zh" 
-            ? t("learn_more")
-            : "Learn more about the Protagonist personality at 16personalities"
-          }
-        </Link>
-      </div>
-    </motion.div>
-  )
-}
-
-const ImageCard = ({ index, image, accentColor = "pink" }: { index: number, image: string, accentColor?: string }) => (
-  <motion.div
-    variants={cardVariants}
-    initial="initial"
-    whileInView="animate"
-    viewport={{ once: true, margin: "-50px" }}
-    custom={index}
-    className={`
-      col-span-1 row-span-1
-      aspect-square
-      bg-gradient-to-br from-white/90 via-white/85 to-white/80
-      dark:from-gray-800/90 dark:via-gray-800/85 dark:to-gray-800/80
-      rounded-2xl
-      shadow-[0_4px_20px_rgb(0,0,0,0.03)]
-      border border-white/8 dark:border-gray-700/15
-      transition-all duration-300
-      backdrop-blur-md
-      overflow-hidden
-      group
-    `}
-  >
-    <div className="relative w-full h-full">
-      <img
-        src={image}
-        alt="Profile"
-        className="w-full h-full object-cover"
-      />
-    </div>
-  </motion.div>
-)
+const cardBaseStyle =
+  "group relative rounded-3xl p-5 sm:p-6 bg-white/70 dark:bg-gray-900/50 backdrop-blur-md border border-gray-200/80 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] transition-all duration-200 ease-out hover:-translate-y-1 overflow-hidden flex flex-col justify-between"
 
 export default function About() {
   const { ref } = useSectionInView("About")
   const t = useTranslations("AboutSection")
+  const tMBTI = useTranslations("MBTISection")
   const sectionLan = useTranslations("SectionName")
-  const activeLocale = useLocale()
 
-  const aboutCards: AboutCardType[] = [
-    {
-      icon: FaCode,
-      title: activeLocale === "zh" ? "关于我" : "About Me",
-      content: activeLocale === "zh" 
-        ? "你好！我是一名来自成都的学生开发者 👋 热爱编程与网站开发，专注于创造优雅的数字体验。熟悉 Python 等语言基本开发，正在努力学习更多前端知识。喜欢写自己的博客，在分享中创造价值。"
-        : "Hi! I'm a student developer from Chengdu 👋 Passionate about coding and web development. Familiar with Python and learning front-end development. Love sharing through my blog.",
-      size: "large" as const,
-      aspectRatio: "wide" as const,
-      priority: "high" as const,
-      accentColor: "pink"
-    },
-    {
-      type: "image",
-      image: "https://bu.dusays.com/2024/05/18/6648acfe0db3b.png",
-      accentColor: "pink"
-    },
-    {
-      icon: FaGamepad,
-      title: "Minecraft",
-      content: activeLocale === "zh"
-        ? "游戏ID：Mystic_Stars ⚔️ 热爱生存建造与小游戏！游玩 Hypixel 的 Bedwars, Skywars 等小游戏，和朋友们在hjmc中游玩生存。"
-        : "Game ID: Mystic_Stars ⚔️ Love survival and mini-games! Playing Bedwars, Skywars on Hypixel and survival on hjmc.",
-      size: "medium" as const,
-      aspectRatio: "square" as const,
-      priority: "medium" as const,
-      accentColor: "emerald"
-    },
-    {
-      icon: PiTelevisionSimpleFill,
-      title: activeLocale === "zh" ? "二次元" : "Anime",
-      content: activeLocale === "zh"
-        ? "动漫爱好者 🌸 在博客中可以找到我追过的番剧，涵盖日漫国漫，以及多个主题。生命不息，追番不止！"
-        : "Anime enthusiast 🌸 Check out my watched anime list on my blog! Covering both Japanese and Chinese animations.",
-      size: "small" as const,
-      expandOnHover: true,
-      priority: "low" as const,
-      accentColor: "violet"
-    },
-    {
-      icon: FaBook,
-      title: activeLocale === "zh" ? "博客" : "Blog",
-      content: activeLocale === "zh"
-        ? "记录技术成长与生活点滴 📝 分享我的编程之路与个人思考。会分享很多有价值的内容，长期更新一些教程。欢迎各位博主来交换友链，也欢迎来访交流！"
-        : "Tech blog & life journal 📝 Sharing programming journey, tutorials and thoughts. Welcome to visit and exchange links!",
-      size: "medium" as const,
-      priority: "medium" as const,
-      accentColor: "sky",
-      href: "https://www.mysticstars.cn"
-    },
-    {
-      icon: SiBilibili,
-      title: "Bilibili",
-      content: activeLocale === "zh"
-        ? "欢迎访问我的B站频道 📺 分享更多有趣的编程内容和游戏视频，从兴趣爱好出发制作视频，将想法通过Bilibili传递到世界更多角落。"
-        : "Welcome to my Bilibili channel 📺 Sharing programming content and gaming videos. Creating from passion!",
-      size: "medium" as const,
-      priority: "medium" as const,
-      accentColor: "blue",
-      href: "https://space.bilibili.com/2007491365"
-    },
-    {
-      icon: FaEnvelope,
-      title: activeLocale === "zh" ? "联系我" : "Contact",
-      content: activeLocale === "zh"
-        ? "📮 1278347583@qq.com · 期待与你交流！无论是技术讨论、项目合作还是交个朋友，都欢迎通过邮件联系我。也可以在我的社交媒体上找到我。"
-        : "📮 1278347583@qq.com · Feel free to reach out for tech discussions, collaborations or just making friends!",
-      size: "small" as const,
-      expandOnHover: true,
-      priority: "low" as const,
-      accentColor: "amber"
+  const [timeString, setTimeString] = useState<string>("")
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date()
+      const formatted = now.toLocaleTimeString("zh-CN", {
+        timeZone: "Asia/Shanghai",
+        hour12: false,
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      })
+      setTimeString(formatted)
     }
-  ]
+    updateTime()
+    const timer = setInterval(updateTime, 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(t("contact_email"))
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error("Failed to copy:", err)
+    }
+  }
 
   return (
     <motion.section
       ref={ref}
-      className="mb-28 max-w-[65rem] text-center leading-8 sm:mb-40 scroll-mt-28 px-4"
-      initial={{ opacity: 0, y: 100 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      className="mb-28 max-w-[65rem] scroll-mt-28 px-4 w-full"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.4 }}
       id="about"
     >
       <SectionHeading>{sectionLan("about")}</SectionHeading>
-      <div className="grid grid-cols-2 sm:grid-cols-4 auto-rows-[minmax(120px,auto)] gap-3 sm:gap-4">
-        {aboutCards.map((card, index) => (
-          card.type === "image" ? (
-            <ImageCard
-              key={index}
-              index={index}
-              image={card.image || ""}
-              accentColor={card.accentColor}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 auto-rows-auto">
+        {/* ================= CARD 1: Hero Bio (2x2 on desktop) ================= */}
+        <motion.div
+          variants={cardEntranceVariants}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          custom={0}
+          className={`${cardBaseStyle} col-span-1 sm:col-span-2 lg:col-span-2 lg:row-span-2`}
+        >
+          <div>
+            <div className="flex items-center justify-between gap-2 mb-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-gray-200/80 dark:border-gray-700/80 bg-gray-50/80 dark:bg-gray-800/90 px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-200 shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                <span>{t("status")}</span>
+              </div>
+              <span className="text-[11px] font-mono tracking-widest text-gray-400 dark:text-gray-400 uppercase font-semibold">
+                {t("badge")}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-4 mb-4">
+              <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm flex-shrink-0">
+                <Image
+                  src="/profile.png"
+                  alt="Mystic Stars"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+              <div>
+                <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  {t("hero_greeting")}
+                </h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mt-0.5">
+                  学生开发者 · 坐标成都 (Chengdu, CN)
+                </p>
+              </div>
+            </div>
+
+            <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300 mb-4">
+              {t("hero_desc")}
+            </p>
+          </div>
+
+          {/* 3 Focus Pillars */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-4 mt-auto border-t border-gray-100 dark:border-gray-800">
+            <div className="flex items-center gap-2.5 rounded-xl bg-gray-50/80 dark:bg-gray-800/60 p-2.5 border border-gray-200/60 dark:border-gray-700/60">
+              <div className="p-2 rounded-lg bg-white dark:bg-gray-700/60 text-gray-700 dark:text-gray-300 shadow-xs border border-gray-200/50 dark:border-gray-600/40">
+                <FaCode className="w-3.5 h-3.5" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-xs font-semibold text-gray-800 dark:text-gray-200 truncate">
+                  Web & 前端
+                </div>
+                <div className="text-[10px] text-gray-400 dark:text-gray-500 truncate font-mono">
+                  Next.js · React
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5 rounded-xl bg-gray-50/80 dark:bg-gray-800/60 p-2.5 border border-gray-200/60 dark:border-gray-700/60">
+              <div className="p-2 rounded-lg bg-white dark:bg-gray-700/60 text-gray-700 dark:text-gray-300 shadow-xs border border-gray-200/50 dark:border-gray-600/40">
+                <FaTerminal className="w-3.5 h-3.5" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-xs font-semibold text-gray-800 dark:text-gray-200 truncate">
+                  Python & 核心
+                </div>
+                <div className="text-[10px] text-gray-400 dark:text-gray-500 truncate font-mono">
+                  Script · Tooling
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5 rounded-xl bg-gray-50/80 dark:bg-gray-800/60 p-2.5 border border-gray-200/60 dark:border-gray-700/60">
+              <div className="p-2 rounded-lg bg-white dark:bg-gray-700/60 text-gray-700 dark:text-gray-300 shadow-xs border border-gray-200/50 dark:border-gray-600/40">
+                <FaShareNodes className="w-3.5 h-3.5" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-xs font-semibold text-gray-800 dark:text-gray-200 truncate">
+                  开源与记录
+                </div>
+                <div className="text-[10px] text-gray-400 dark:text-gray-500 truncate font-mono">
+                  Blog · GitHub
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ================= CARD 2: MBTI (1x2 on desktop) ================= */}
+        <motion.div
+          variants={cardEntranceVariants}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          custom={1}
+          className={`${cardBaseStyle} col-span-1 sm:col-span-2 lg:col-span-1 lg:row-span-2 relative`}
+        >
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wider bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                {tMBTI("type")}
+              </span>
+              <span className="text-xs font-mono text-gray-400 dark:text-gray-500 font-semibold">
+                {tMBTI("badge")}
+              </span>
+            </div>
+
+            <h3 className="text-base font-bold text-gray-900 dark:text-white">
+              {tMBTI("title")}
+            </h3>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 mb-3.5">
+              {tMBTI("personality_traits")}
+            </p>
+
+            {/* Personality Spectrum Bars */}
+            <div className="space-y-2.5 relative z-10">
+              <div>
+                <div className="flex justify-between text-[11px] font-medium text-gray-600 dark:text-gray-300 mb-1">
+                  <span>外向 Extraverted</span>
+                  <span className="font-mono font-semibold text-gray-900 dark:text-white">76%</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                  <div className="h-full rounded-full bg-emerald-500/80 w-[76%]" />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-[11px] font-medium text-gray-600 dark:text-gray-300 mb-1">
+                  <span>直觉 Intuitive</span>
+                  <span className="font-mono font-semibold text-gray-900 dark:text-white">68%</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                  <div className="h-full rounded-full bg-emerald-500/80 w-[68%]" />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-[11px] font-medium text-gray-600 dark:text-gray-300 mb-1">
+                  <span>情感 Feeling</span>
+                  <span className="font-mono font-semibold text-gray-900 dark:text-white">72%</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                  <div className="h-full rounded-full bg-emerald-500/80 w-[72%]" />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-[11px] font-medium text-gray-600 dark:text-gray-300 mb-1">
+                  <span>判断 Judging</span>
+                  <span className="font-mono font-semibold text-gray-900 dark:text-white">81%</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                  <div className="h-full rounded-full bg-emerald-500/80 w-[81%]" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative pt-4 mt-auto z-10 flex items-center justify-between border-t border-gray-100 dark:border-gray-800">
+            <Link
+              href="https://www.16personalities.com/enfj-personality"
+              target="_blank"
+              className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors font-medium"
+            >
+              <span>16personalities</span>
+              <FiArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-150" />
+            </Link>
+          </div>
+
+          {/* Background Illustration watermark */}
+          <div className="absolute right-[-4px] bottom-6 w-24 sm:w-28 pointer-events-none opacity-15 dark:opacity-10">
+            <Image
+              src="/enfj.svg"
+              alt="ENFJ"
+              width={120}
+              height={120}
+              className="w-full object-contain"
             />
-          ) : (
-            <AboutCard
-              key={index}
-              icon={card.icon || FaCode}
-              title={card.title}
-              content={card.content!}
-              index={index}
-              size={card.size}
-              expandOnHover={card.expandOnHover}
-              aspectRatio={card.aspectRatio}
-              priority={card.priority}
-              accentColor={card.accentColor}
-              href={card.href}
+          </div>
+        </motion.div>
+
+        {/* ================= CARD 3: Location & Clock (1x1 on desktop) ================= */}
+        <motion.div
+          variants={cardEntranceVariants}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          custom={2}
+          className={`${cardBaseStyle} p-5 sm:p-5 col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1`}
+        >
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <span className="text-[11px] text-gray-400 dark:text-gray-500 font-medium block">
+                {t("location_title")}
+              </span>
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                {t("location_city")}
+              </span>
+            </div>
+            <span className="text-[10px] font-mono text-gray-400 dark:text-gray-500 shrink-0 pt-0.5">
+              {t("location_coords")}
+            </span>
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 flex items-end justify-between">
+            <div>
+              <div className="font-mono text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
+                <FiClock className="w-4 h-4 text-gray-400" />
+                <span>{timeString || "00:00:00"}</span>
+              </div>
+              <p className="text-[11px] font-mono text-gray-500 dark:text-gray-400 mt-0.5">
+                {t("location_timezone")}
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ================= CARD 4: Quick Contact (1x1 on desktop) ================= */}
+        <motion.div
+          variants={cardEntranceVariants}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          custom={3}
+          className={`${cardBaseStyle} p-5 sm:p-5 col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1`}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="p-2.5 rounded-2xl bg-gray-100 dark:bg-gray-800 text-amber-500 border border-gray-200/60 dark:border-gray-700/60 shrink-0">
+                <FaEnvelope className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <span className="text-[11px] text-gray-400 dark:text-gray-500 font-medium block truncate">
+                  {t("contact_title")}
+                </span>
+                <span className="text-xs font-mono font-medium text-gray-700 dark:text-gray-300 truncate block">
+                  {t("contact_email")}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 flex gap-2">
+            <button
+              onClick={handleCopyEmail}
+              className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-medium bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 active:scale-[0.98] transition-all duration-150"
+            >
+              {copied ? (
+                <FiCheck className="w-3.5 h-3.5 text-emerald-500" />
+              ) : (
+                <FiCopy className="w-3.5 h-3.5 text-gray-500" />
+              )}
+              <span>{copied ? t("contact_copied") : t("contact_copy")}</span>
+            </button>
+            <a
+              href={`mailto:${t("contact_email")}`}
+              className="inline-flex items-center justify-center p-2 rounded-xl bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:opacity-90 active:scale-[0.98] transition-all duration-150"
+              aria-label="Send email"
+            >
+              <FiSend className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-150" />
+            </a>
+          </div>
+        </motion.div>
+
+        {/* ================= CARD 5: GitHub Contributions (2x1 on desktop) ================= */}
+        <motion.div
+          variants={cardEntranceVariants}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          custom={4}
+          className={`${cardBaseStyle} col-span-1 sm:col-span-2 lg:col-span-2 lg:row-span-1 relative`}
+        >
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2.5 rounded-2xl bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200/60 dark:border-gray-700/60">
+                <FaGithub className="w-4 h-4" />
+              </div>
+              <div>
+                <span className="text-sm font-semibold text-gray-900 dark:text-white block">
+                  {t("github_title")}
+                </span>
+                <span className="text-xs text-gray-400 dark:text-gray-500">
+                  {t("github_desc")}
+                </span>
+              </div>
+            </div>
+            <Link
+              href="https://github.com/Mystic-Stars"
+              target="_blank"
+              className="inline-flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors font-mono"
+            >
+              <span>@Mystic-Stars</span>
+              <FiArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-150" />
+            </Link>
+          </div>
+
+          <GitHubActivity
+            username="Mystic-Stars"
+            showMonths={true}
+            cellSize={9.5}
+            label={t("github_repos")}
+            className="w-full pt-1"
+          />
+        </motion.div>
+
+        {/* ================= CARD 6: Minecraft (1x1 on desktop) ================= */}
+        <motion.div
+          variants={cardEntranceVariants}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          custom={5}
+          className={`${cardBaseStyle} p-5 sm:p-5 col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1 relative overflow-hidden`}
+        >
+          <div>
+            <div className="flex items-center justify-between gap-2 mb-3 relative z-10">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="relative w-8 h-8 rounded-xl overflow-hidden border border-emerald-500/20 shrink-0 shadow-xs">
+                  <Image
+                    src="/minecraft.png"
+                    alt="Minecraft"
+                    width={32}
+                    height={32}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white truncate block">
+                    {t("minecraft_title")}
+                  </span>
+                  <span className="text-[11px] font-mono text-gray-400 dark:text-gray-500 truncate block">
+                    Mystic_Stars
+                  </span>
+                </div>
+              </div>
+              <span className="shrink-0 text-[10px] font-mono font-medium px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200/60 dark:border-gray-700/60">
+                Java Ed.
+              </span>
+            </div>
+
+            <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-300 line-clamp-3 mb-3 relative z-10">
+              {t("minecraft_desc")}
+            </p>
+
+            <div className="flex items-center gap-1.5 flex-wrap relative z-10">
+              <span className="text-[11px] px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700/60 font-medium">
+                {t("minecraft_tag1")}
+              </span>
+              <span className="text-[11px] px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700/60 font-medium">
+                {t("minecraft_tag2")}
+              </span>
+              <span className="text-[11px] px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700/60 font-medium">
+                {t("minecraft_tag3")}
+              </span>
+            </div>
+          </div>
+
+          <div className="pt-2.5 border-t border-gray-100 dark:border-gray-800 mt-auto flex items-center justify-between text-[11px] relative z-10">
+            <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 min-w-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 shadow-[0_0_6px_rgba(16,185,129,0.5)]" />
+              <span className="truncate font-mono text-[11px]">Hypixel · hjmc</span>
+            </div>
+            <span className="shrink-0 text-[10px] font-mono font-medium text-emerald-600 dark:text-emerald-400">
+              Java Edition
+            </span>
+          </div>
+
+          {/* User Requested Minecraft Logo Watermark */}
+          <div className="absolute right-[-6px] bottom-3.5 w-36 sm:w-40 pointer-events-none opacity-15 dark:opacity-10 z-0">
+            <Image
+              src="/minecraft-logo.png"
+              alt="Minecraft Logo"
+              width={300}
+              height={51}
+              className="w-full object-contain"
             />
-          )
-        ))}
-        <GithubStatsCard index={aboutCards.length} />
-        <MBTICard index={aboutCards.length + 1} />
+          </div>
+        </motion.div>
+
+        {/* ================= CARD 7: Anime (1x1 on desktop) ================= */}
+        <motion.div
+          variants={cardEntranceVariants}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          custom={6}
+          className={`${cardBaseStyle} p-5 sm:p-5 col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1 relative overflow-hidden`}
+        >
+          <div>
+            <div className="flex items-center justify-between gap-2 mb-3 relative z-10">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="p-2 rounded-xl bg-pink-50 dark:bg-pink-950/40 text-pink-500 dark:text-pink-400 border border-pink-200/60 dark:border-pink-500/30 shrink-0">
+                  <PiTelevisionSimpleFill className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white truncate block">
+                    {t("anime_title")}
+                  </span>
+                  <span className="text-[11px] text-gray-500 dark:text-gray-400 truncate block">
+                    {t("anime_subtitle")}
+                  </span>
+                </div>
+              </div>
+              <span className="shrink-0 text-[10px] font-mono font-medium px-2 py-0.5 rounded-md bg-pink-50 dark:bg-pink-950/40 text-pink-600 dark:text-pink-400 border border-pink-200/60 dark:border-pink-500/30">
+                ACG
+              </span>
+            </div>
+
+            <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-300 line-clamp-3 mb-3 relative z-10">
+              {t("anime_desc")}
+            </p>
+
+            <div className="flex items-center gap-1.5 flex-wrap relative z-10">
+              <span className="text-[11px] px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700/60 font-medium">
+                {t("anime_tag1")}
+              </span>
+              <span className="text-[11px] px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700/60 font-medium">
+                {t("anime_tag2")}
+              </span>
+              <span className="text-[11px] px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700/60 font-medium">
+                {t("anime_tag3")}
+              </span>
+            </div>
+          </div>
+
+          <div className="pt-2.5 border-t border-gray-100 dark:border-gray-800 mt-auto flex items-center justify-between gap-2 relative z-10">
+            <span className="text-[11px] font-mono text-gray-500 dark:text-gray-400 truncate">
+              mysticstars.cn
+            </span>
+            <Link
+              href="https://www.mysticstars.cn"
+              target="_blank"
+              className="shrink-0 inline-flex items-center gap-1 text-xs font-medium text-pink-600 hover:text-pink-700 dark:text-pink-400 dark:hover:text-pink-300 transition-colors group/link"
+            >
+              <span>{t("anime_action")}</span>
+              <FiArrowUpRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-150" />
+            </Link>
+          </div>
+        </motion.div>
+
+        {/* ================= CARD 8: Personal Blog (2x1 on desktop) ================= */}
+        <motion.div
+          variants={cardEntranceVariants}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          custom={7}
+          className={`${cardBaseStyle} col-span-1 sm:col-span-2 lg:col-span-2 lg:row-span-1`}
+        >
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2.5 rounded-2xl bg-gray-100 dark:bg-gray-800 text-sky-500 border border-gray-200/60 dark:border-gray-700/60">
+                  <FaBookBookmark className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {t("blog_title")}
+                  </span>
+                  <span className="hidden sm:inline text-xs font-mono text-gray-400 dark:text-gray-500 ml-2">
+                    mysticstars.cn
+                  </span>
+                </div>
+              </div>
+
+              <Link
+                href="https://www.mysticstars.cn"
+                target="_blank"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 active:scale-[0.98] transition-all duration-150"
+              >
+                <span>{t("blog_action")}</span>
+                <FiArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-150" />
+              </Link>
+            </div>
+
+            <p className="text-xs sm:text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+              {t("blog_desc")}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 pt-3 border-t border-gray-100 dark:border-gray-800 mt-3">
+            <span className="text-[11px] px-2.5 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700/60 font-medium">
+              {t("blog_tag1")}
+            </span>
+            <span className="text-[11px] px-2.5 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700/60 font-medium">
+              {t("blog_tag2")}
+            </span>
+            <span className="text-[11px] px-2.5 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700/60 font-medium">
+              {t("blog_tag3")}
+            </span>
+          </div>
+        </motion.div>
+
+        {/* ================= CARD 9: Bilibili (2x1 on desktop) ================= */}
+        <motion.div
+          variants={cardEntranceVariants}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          custom={8}
+          className={`${cardBaseStyle} col-span-1 sm:col-span-2 lg:col-span-2 lg:row-span-1`}
+        >
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2.5 rounded-2xl bg-gray-100 dark:bg-gray-800 text-[#00AEEC] border border-gray-200/60 dark:border-gray-700/60">
+                  <SiBilibili className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {t("bilibili_title")}
+                  </span>
+                  <span className="hidden sm:inline text-xs font-mono text-gray-400 dark:text-gray-500 ml-2">
+                    space.bilibili.com
+                  </span>
+                </div>
+              </div>
+
+              <Link
+                href="https://space.bilibili.com/2007491365"
+                target="_blank"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 active:scale-[0.98] transition-all duration-150"
+              >
+                <span>{t("bilibili_action")}</span>
+                <FiArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-150" />
+              </Link>
+            </div>
+
+            <p className="text-xs sm:text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+              {t("bilibili_desc")}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 pt-3 border-t border-gray-100 dark:border-gray-800 mt-3">
+            <span className="text-[11px] px-2.5 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700/60 font-medium">
+              {t("bilibili_tag1")}
+            </span>
+            <span className="text-[11px] px-2.5 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700/60 font-medium">
+              {t("bilibili_tag2")}
+            </span>
+            <span className="text-[11px] px-2.5 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent dark:border-gray-700/60 font-medium">
+              {t("bilibili_tag3")}
+            </span>
+          </div>
+        </motion.div>
       </div>
     </motion.section>
   )
