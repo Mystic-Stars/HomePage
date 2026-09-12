@@ -70,9 +70,14 @@
         "title": "主人公",
         "personality_traits": "性格特质",
         "trait_extraverted": "外向 Extraverted",
+        "trait_extraverted_desc": "热情社交 · 能量向外",
         "trait_intuitive": "直觉 Intuitive",
+        "trait_intuitive_desc": "洞察本质 · 远见探索",
         "trait_feeling": "情感 Feeling",
+        "trait_feeling_desc": "同理共情 · 利他人文",
         "trait_judging": "判断 Judging",
+        "trait_judging_desc": "目标明确 · 规划条理",
+        "hover_tip": "悬停维度查看解析",
         "traits": {
             "trait1": "感召力与领导才能",
             "trait2": "乐于启发的教导者",
@@ -85,7 +90,8 @@
         "languages": "编程语言",
         "frameworks": "框架与跨端",
         "tools": "工具与平台",
-        "creative": "兴趣与探索"
+        "creative": "兴趣与探索",
+        "connected_hint": "生态共生技能"
     },
     "ProjectSection": {
         "subtitle": "精选开源项目与实践作品",
@@ -109,6 +115,24 @@
         "theme_dark": "主题：深色模式",
         "sound_enabled": "音效：已开启（点击静音）",
         "sound_muted": "音效：已静音（点击开启）",
-        "change_language": "切换语言"
+        "change_language": "切换语言",
+        "shortcuts": "快捷键速查"
+    },
+    "ShortcutsModal": {
+        "title": "快捷键速查",
+        "badge": "KEYBOARD",
+        "subtitle": "支持全站单键极速触达与物理按键响应",
+        "press_hint": "在键盘上轻按对应按键即可即时激活",
+        "category_nav": "全局导航",
+        "category_prefs": "个性偏好",
+        "category_window": "视窗控制",
+        "click_to_trigger": "点击即可执行",
+        "key_cmd_k": "全局命令与搜索菜单",
+        "key_slash": "快速唤醒命令菜单",
+        "key_theme": "快速切换浅色 / 深色主题",
+        "key_sound": "开启 / 静音界面微音效",
+        "key_lang": "中英文语言无缝切换",
+        "key_help": "打开 / 关闭快捷键面板",
+        "key_esc": "关闭当前弹窗与面板"
     }
 }

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react"
 import SectionHeading from "./SectionHeading"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { useSectionInView } from "@/lib/hooks"
 import { useLocale, useTranslations } from "next-intl"
 import Image from "next/image"
@@ -72,12 +72,12 @@ export default function About() {
   const tMBTI = useTranslations("MBTISection")
   const sectionLan = useTranslations("SectionName")
   const activeLocale = useLocale()
-  const { soundEnabled } = useSoundContext()
-  const [playPop] = useSound("/bubble.wav", { volume: 0.5, soundEnabled })
+  const { soundEnabled, playPop, playChime } = useSoundContext()
 
   const [timeString, setTimeString] = useState<string>("")
   const [copied, setCopied] = useState(false)
   const [timeCopied, setTimeCopied] = useState(false)
+  const [activeTraitKey, setActiveTraitKey] = useState<string | null>(null)
 
   useEffect(() => {
     const updateTime = () => {
@@ -99,7 +99,7 @@ export default function About() {
   const handleCopyEmail = async () => {
     try {
       await navigator.clipboard.writeText(t("contact_email"))
-      if (soundEnabled) playPop()
+      playChime()
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
@@ -111,13 +111,44 @@ export default function About() {
     try {
       const fullTime = `${timeString} CST (UTC+8, Chengdu/Shanghai)`
       await navigator.clipboard.writeText(fullTime)
-      if (soundEnabled) playPop()
+      playChime()
       setTimeCopied(true)
       setTimeout(() => setTimeCopied(false), 1800)
     } catch (err) {
       console.error(err)
     }
   }
+
+  const mbtiTraits = [
+    {
+      key: "extraverted",
+      label: tMBTI("trait_extraverted"),
+      desc: tMBTI("trait_extraverted_desc"),
+      percent: "76%",
+      widthClass: "w-[76%]",
+    },
+    {
+      key: "intuitive",
+      label: tMBTI("trait_intuitive"),
+      desc: tMBTI("trait_intuitive_desc"),
+      percent: "68%",
+      widthClass: "w-[68%]",
+    },
+    {
+      key: "feeling",
+      label: tMBTI("trait_feeling"),
+      desc: tMBTI("trait_feeling_desc"),
+      percent: "72%",
+      widthClass: "w-[72%]",
+    },
+    {
+      key: "judging",
+      label: tMBTI("trait_judging"),
+      desc: tMBTI("trait_judging_desc"),
+      percent: "81%",
+      widthClass: "w-[81%]",
+    },
+  ]
 
   return (
     <motion.section
@@ -222,11 +253,11 @@ export default function About() {
         {/* ================= CARD 2: MBTI (1x2 on desktop) ================= */}
         <BentoCard
           custom={1}
-          className="col-span-1 sm:col-span-2 lg:col-span-1 lg:row-span-2 relative"
+          className="col-span-1 sm:col-span-2 lg:col-span-1 lg:row-span-2 relative group/mbti"
         >
           <div>
             <div className="flex items-center justify-between mb-3">
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wider bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wider bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shadow-xs">
                 {tMBTI("type")}
               </span>
               <span className="text-xs font-mono text-gray-400 dark:text-gray-500 font-semibold">
@@ -237,75 +268,103 @@ export default function About() {
             <h3 className="text-base font-bold text-gray-900 dark:text-white">
               {tMBTI("title")}
             </h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 mb-3.5">
-              {tMBTI("personality_traits")}
-            </p>
 
-            {/* Personality Spectrum Bars with dynamic spring filling animation */}
-            <div className="space-y-2.5 relative z-10">
-              <div>
-                <div className="flex justify-between text-[11px] font-medium text-gray-600 dark:text-gray-300 mb-1">
-                  <span>{tMBTI("trait_extraverted")}</span>
-                  <span className="font-mono font-semibold text-gray-900 dark:text-white">76%</span>
-                </div>
-                <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: "76%" }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                    className="h-full rounded-full bg-emerald-500/80"
-                  />
-                </div>
+            {/* Robust zero-height-impact inline trait description */}
+            <div className="h-5 mt-0.5 mb-3.5 flex items-center w-full min-w-0">
+              <div className="text-xs font-medium text-emerald-600 dark:text-emerald-400 truncate flex items-center gap-1.5">
+                {activeTraitKey ? (
+                  <>
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 shadow-[0_0_6px_rgba(16,185,129,0.8)] animate-pulse" />
+                    <span className="font-semibold text-gray-900 dark:text-white shrink-0">
+                      {mbtiTraits.find((t) => t.key === activeTraitKey)?.label.split(" ")[0]} ·
+                    </span>
+                    <span className="text-emerald-700 dark:text-emerald-300 font-medium truncate">
+                      {mbtiTraits.find((t) => t.key === activeTraitKey)?.desc}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-xs text-gray-500 dark:text-gray-400 font-normal">
+                    {tMBTI("personality_traits")}
+                  </span>
+                )}
               </div>
+            </div>
 
-              <div>
-                <div className="flex justify-between text-[11px] font-medium text-gray-600 dark:text-gray-300 mb-1">
-                  <span>{tMBTI("trait_intuitive")}</span>
-                  <span className="font-mono font-semibold text-gray-900 dark:text-white">68%</span>
-                </div>
-                <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: "68%" }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                    className="h-full rounded-full bg-emerald-500/80"
-                  />
-                </div>
-              </div>
+            {/* Personality Spectrum Bars with sleek inline micro-hover */}
+            <div
+              className="space-y-2.5 relative z-10"
+              onMouseLeave={() => setActiveTraitKey(null)}
+            >
+              {mbtiTraits.map((trait) => {
+                const isActive = activeTraitKey === trait.key
+                const hasFocus = activeTraitKey !== null
 
-              <div>
-                <div className="flex justify-between text-[11px] font-medium text-gray-600 dark:text-gray-300 mb-1">
-                  <span>{tMBTI("trait_feeling")}</span>
-                  <span className="font-mono font-semibold text-gray-900 dark:text-white">72%</span>
-                </div>
-                <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: "72%" }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                    className="h-full rounded-full bg-emerald-500/80"
-                  />
-                </div>
-              </div>
+                return (
+                  <div
+                    key={trait.key}
+                    onMouseEnter={() => {
+                      setActiveTraitKey(trait.key)
+                      playPop(0.04)
+                    }}
+                    onClick={() => {
+                      setActiveTraitKey((prev) => (prev === trait.key ? null : trait.key))
+                      playPop(0.05)
+                    }}
+                    className={`transition-all duration-150 cursor-pointer select-none ${
+                      isActive
+                        ? "opacity-100"
+                        : hasFocus
+                        ? "opacity-45"
+                        : "opacity-100"
+                    }`}
+                  >
+                    <div className="flex justify-between items-center text-[11px] font-medium text-gray-600 dark:text-gray-300 mb-1">
+                      <span className="flex items-center gap-1.5 transition-colors duration-150">
+                        {isActive && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
+                        )}
+                        <span className={isActive ? "text-gray-900 dark:text-white font-semibold" : ""}>
+                          {trait.label}
+                        </span>
+                      </span>
 
-              <div>
-                <div className="flex justify-between text-[11px] font-medium text-gray-600 dark:text-gray-300 mb-1">
-                  <span>{tMBTI("trait_judging")}</span>
-                  <span className="font-mono font-semibold text-gray-900 dark:text-white">81%</span>
-                </div>
-                <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: "81%" }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                    className="h-full rounded-full bg-emerald-500/80"
-                  />
-                </div>
-              </div>
+                      <div className="flex items-center gap-2">
+                        {isActive && (
+                          <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-normal hidden min-[360px]:inline-block transition-opacity animate-in fade-in">
+                            {trait.desc.split(" · ")[1] || trait.desc}
+                          </span>
+                        )}
+                        <span
+                          className={`font-mono font-semibold transition-colors duration-150 ${
+                            isActive
+                              ? "text-emerald-600 dark:text-emerald-400"
+                              : "text-gray-900 dark:text-white"
+                          }`}
+                        >
+                          {trait.percent}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        whileInView={{ width: trait.percent }}
+                        viewport={{ once: true }}
+                        transition={{
+                          duration: 0.8,
+                          delay: 0.1,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                        className={`h-full rounded-full transition-all duration-300 ${
+                          isActive
+                            ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]"
+                            : "bg-emerald-500/80"
+                        }`}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </div>
 
@@ -313,15 +372,15 @@ export default function About() {
             <Link
               href="https://www.16personalities.com/enfj-personality"
               target="_blank"
-              className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors font-medium"
+              className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors font-medium group/link"
             >
               <span>16personalities</span>
-              <FiArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-150" />
+              <FiArrowUpRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-150" />
             </Link>
           </div>
 
           {/* Background Illustration watermark */}
-          <div className="absolute right-[-4px] bottom-6 w-24 sm:w-28 pointer-events-none opacity-15 dark:opacity-10">
+          <div className="absolute right-[-4px] bottom-6 w-24 sm:w-28 pointer-events-none opacity-15 dark:opacity-10 transition-opacity duration-300 group-hover/mbti:opacity-25 select-none">
             <Image
               src="/enfj.svg"
               alt="ENFJ"

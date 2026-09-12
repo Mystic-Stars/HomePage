@@ -70,9 +70,14 @@
         "title": "The Protagonist",
         "personality_traits": "Key Traits",
         "trait_extraverted": "Extraverted",
+        "trait_extraverted_desc": "Warm & Social · Outward Energy",
         "trait_intuitive": "Intuitive",
+        "trait_intuitive_desc": "Visionary & Insightful · Big Picture",
         "trait_feeling": "Feeling",
+        "trait_feeling_desc": "Empathetic & Caring · People-first",
         "trait_judging": "Judging",
+        "trait_judging_desc": "Goal-driven · Organized & Structured",
+        "hover_tip": "Hover over traits to inspect",
         "traits": {
             "trait1": "Charismatic Leader",
             "trait2": "Insightful Guide",
@@ -85,7 +90,8 @@
         "languages": "Programming Languages",
         "frameworks": "Frameworks & Desktop",
         "tools": "Tools & Platforms",
-        "creative": "Creative & Gaming"
+        "creative": "Creative & Gaming",
+        "connected_hint": "Connected Ecosystem"
     },
     "ProjectSection": {
         "subtitle": "Selected open-source projects and creative works",
@@ -109,6 +115,24 @@
         "theme_dark": "Theme: Dark",
         "sound_enabled": "Sound: Enabled (Click to mute)",
         "sound_muted": "Sound: Muted (Click to enable)",
-        "change_language": "Change Language"
+        "change_language": "Change Language",
+        "shortcuts": "Keyboard Shortcuts"
+    },
+    "ShortcutsModal": {
+        "title": "Keyboard Shortcuts",
+        "badge": "KEYBOARD",
+        "subtitle": "Single-key quick navigation and tactile feedback",
+        "press_hint": "Press any key on physical keyboard to trigger",
+        "category_nav": "Global Navigation",
+        "category_prefs": "Preferences",
+        "category_window": "Window Controls",
+        "click_to_trigger": "Click to trigger",
+        "key_cmd_k": "Open command & search palette",
+        "key_slash": "Quick open command menu",
+        "key_theme": "Toggle light / dark / system theme",
+        "key_sound": "Toggle audio micro-interactions",
+        "key_lang": "Switch between English / Chinese",
+        "key_help": "Open / close this cheatsheet",
+        "key_esc": "Close modal or command menu"
     }
 }

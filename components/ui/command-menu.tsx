@@ -17,6 +17,8 @@ import {
   FiCheck,
   FiExternalLink,
   FiCornerDownLeft,
+  FiHelpCircle,
+  FiTerminal,
 } from "react-icons/fi"
 import {
   FaHouse,
@@ -27,7 +29,6 @@ import {
   FaGithub,
   FaBilibili,
 } from "react-icons/fa6"
-import useSound from "use-sound"
 
 interface CommandItem {
   id: string
@@ -37,14 +38,23 @@ interface CommandItem {
   category: "navigation" | "actions" | "links"
   action: () => void
   keywords?: string[]
+  hiddenByDefault?: boolean
+  requiredKeyword?: string
 }
 
 interface CommandMenuProps {
   isOpen: boolean
   onClose: () => void
+  onOpenShortcuts?: () => void
+  onOpenTerminal?: (mode?: "terminal" | "rainOnly") => void
 }
 
-export default function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
+export default function CommandMenu({
+  isOpen,
+  onClose,
+  onOpenShortcuts,
+  onOpenTerminal,
+}: CommandMenuProps) {
   const [query, setQuery] = useState("")
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [copiedText, setCopiedText] = useState<string | null>(null)
@@ -52,13 +62,19 @@ export default function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
   const router = useRouter()
   const pathname = usePathname()
   const { theme, toggleTheme } = useTheme()
-  const { soundEnabled, toggleSound } = useSoundContext()
-  const [playPop] = useSound("/bubble.wav", { volume: 0.4, soundEnabled })
+  const { soundEnabled, toggleSound, playChime, playWhoosh, playClick } =
+    useSoundContext()
 
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
 
   const isZh = activeLocale === "zh"
+
+  useEffect(() => {
+    if (isOpen) {
+      playWhoosh(0.04)
+    }
+  }, [isOpen, playWhoosh])
 
   // Handle Copy helper
   const handleCopy = useCallback(
@@ -66,7 +82,7 @@ export default function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
       try {
         await navigator.clipboard.writeText(text)
         setCopiedText(label)
-        if (soundEnabled) playPop()
+        playChime(0.08)
         setTimeout(() => {
           setCopiedText(null)
           onClose()
@@ -75,7 +91,7 @@ export default function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
         console.error(e)
       }
     },
-    [soundEnabled, playPop, onClose]
+    [playChime, onClose]
   )
 
   // Unified items list with cohesive styling
@@ -202,6 +218,52 @@ export default function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
         },
         keywords: ["rss", "feed", "xml", "copy", "订阅"],
       },
+      {
+        id: "act-shortcuts",
+        title: isZh ? "全局快捷键速查" : "Keyboard Shortcuts",
+        subtitle: "?",
+        icon: <FiHelpCircle className="w-3.5 h-3.5 text-purple-500" />,
+        category: "actions",
+        action: () => {
+          onClose()
+          setTimeout(() => {
+            onOpenShortcuts?.()
+          }, 150)
+        },
+        keywords: ["shortcut", "hotkey", "keyboard", "help", "快捷键", "按键", "帮助"],
+      },
+      {
+        id: "act-terminal",
+        title: isZh ? "极简黑客终端 (Terminal Mode)" : "Hacker Terminal Mode",
+        subtitle: "terminal",
+        icon: <FiTerminal className="w-3.5 h-3.5 text-emerald-500" />,
+        category: "actions",
+        hiddenByDefault: true,
+        requiredKeyword: "terminal",
+        action: () => {
+          onClose()
+          setTimeout(() => {
+            onOpenTerminal?.("terminal")
+          }, 150)
+        },
+        keywords: ["terminal"],
+      },
+      {
+        id: "act-matrix",
+        title: isZh ? "字符雨流光矩阵 (Matrix Rain)" : "Matrix Code Rain",
+        subtitle: "matrix",
+        icon: <FiTerminal className="w-3.5 h-3.5 text-emerald-500" />,
+        category: "actions",
+        hiddenByDefault: true,
+        requiredKeyword: "matrix",
+        action: () => {
+          onClose()
+          setTimeout(() => {
+            onOpenTerminal?.("rainOnly")
+          }, 150)
+        },
+        keywords: ["matrix"],
+      },
 
       // External Links
       {
@@ -241,19 +303,25 @@ export default function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
         keywords: ["bilibili", "video", "b站", "视频"],
       },
     ],
-    [isZh, activeLocale, theme, soundEnabled, copiedText, pathname, router, onClose, toggleTheme, toggleSound, handleCopy]
+    [isZh, activeLocale, theme, soundEnabled, copiedText, pathname, router, onClose, onOpenShortcuts, onOpenTerminal, toggleTheme, toggleSound, handleCopy]
   )
 
   // Filter items based on query
   const filteredItems = useMemo(() => {
-    if (!query.trim()) return items
     const q = query.toLowerCase().trim()
-    return items.filter(
-      (item) =>
+    if (!q) {
+      return items.filter((item) => !item.hiddenByDefault)
+    }
+    return items.filter((item) => {
+      if (item.hiddenByDefault) {
+        return item.requiredKeyword ? q === item.requiredKeyword.toLowerCase() : false
+      }
+      return (
         item.title.toLowerCase().includes(q) ||
         item.subtitle?.toLowerCase().includes(q) ||
         item.keywords?.some((k) => k.toLowerCase().includes(q))
-    )
+      )
+    })
   }, [items, query])
 
   // Group filtered items by category
@@ -354,17 +422,18 @@ export default function CommandMenu({ isOpen, onClose }: CommandMenuProps) {
                     ? "搜索指令或跳转页面..."
                     : "Search commands or jump to section..."
                 }
-                className="w-full bg-transparent text-sm sm:text-base outline-none text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 font-normal"
+                className="flex-1 min-w-0 bg-transparent text-sm sm:text-base outline-none text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 font-normal"
               />
               {query && (
                 <button
+                  type="button"
                   onClick={() => setQuery("")}
-                  className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 font-mono px-1.5 py-0.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="shrink-0 whitespace-nowrap text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 px-2 py-0.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors select-none"
                 >
                   {isZh ? "清空" : "Clear"}
                 </button>
               )}
-              <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono rounded-md bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200/60 dark:border-gray-700/60 select-none">
+              <kbd className="shrink-0 hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono rounded-md bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200/60 dark:border-gray-700/60 select-none">
                 ESC
               </kbd>
             </div>

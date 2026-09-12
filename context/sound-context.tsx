@@ -2,10 +2,23 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react"
 
+import {
+  playProceduralPop,
+  playProceduralClick,
+  playProceduralChime,
+  playProceduralWhoosh,
+  playProceduralSwitch,
+} from "@/lib/sound-effects"
+
 type SoundContextType = {
   soundEnabled: boolean
   toggleSound: () => void
   setSoundEnabled: (enabled: boolean) => void
+  playPop: (volume?: number) => void
+  playClick: (volume?: number) => void
+  playChime: (volume?: number) => void
+  playWhoosh: (volume?: number) => void
+  playSwitch: (volume?: number) => void
 }
 
 const SoundContext = createContext<SoundContextType | null>(null)
@@ -29,6 +42,9 @@ export function SoundContextProvider({
     setSoundEnabled((prev) => {
       const next = !prev
       window.localStorage.setItem("sound_enabled", String(next))
+      if (next) {
+        playProceduralSwitch(0.08)
+      }
       return next
     })
   }
@@ -38,12 +54,52 @@ export function SoundContextProvider({
     window.localStorage.setItem("sound_enabled", String(enabled))
   }
 
+  const playPop = React.useCallback(
+    (volume?: number) => {
+      if (soundEnabled) playProceduralPop(volume)
+    },
+    [soundEnabled]
+  )
+
+  const playClick = React.useCallback(
+    (volume?: number) => {
+      if (soundEnabled) playProceduralClick(volume)
+    },
+    [soundEnabled]
+  )
+
+  const playChime = React.useCallback(
+    (volume?: number) => {
+      if (soundEnabled) playProceduralChime(volume)
+    },
+    [soundEnabled]
+  )
+
+  const playWhoosh = React.useCallback(
+    (volume?: number) => {
+      if (soundEnabled) playProceduralWhoosh(volume)
+    },
+    [soundEnabled]
+  )
+
+  const playSwitch = React.useCallback(
+    (volume?: number) => {
+      if (soundEnabled) playProceduralSwitch(volume)
+    },
+    [soundEnabled]
+  )
+
   return (
     <SoundContext.Provider
       value={{
         soundEnabled,
         toggleSound,
         setSoundEnabled: handleSetSoundEnabled,
+        playPop,
+        playClick,
+        playChime,
+        playWhoosh,
+        playSwitch,
       }}
     >
       {children}

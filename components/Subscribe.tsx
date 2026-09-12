@@ -7,6 +7,7 @@ import { FiCopy, FiCheck, FiArrowUpRight, FiExternalLink } from "react-icons/fi"
 import { useLocale, useTranslations } from "next-intl"
 import { headerLanguageMap } from "@/lib/data"
 import { useSectionInView } from "@/lib/hooks"
+import { useSoundContext } from "@/context/sound-context"
 import SectionHeading from "./SectionHeading"
 
 const RSS_LINK = "https://www.mysticstars.cn/rss.xml"
@@ -36,12 +37,14 @@ function FollowOfficialIcon({ className = "w-5 h-5" }: { className?: string }) {
 export default function Subscribe() {
   const { ref } = useSectionInView("Subscribe", 0.5)
   const activeLocale = useLocale()
+  const { playChime } = useSoundContext()
   const t = useTranslations("SubscribeSection")
   const [copied, setCopied] = useState(false)
 
   const handleCopyRSS = async () => {
     try {
       await navigator.clipboard.writeText(RSS_LINK)
+      playChime()
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {

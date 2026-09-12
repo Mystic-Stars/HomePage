@@ -3,13 +3,16 @@
 import { IoLanguageOutline } from "react-icons/io5"
 import { useLocale } from "next-intl"
 import { usePathname, useRouter } from "next/navigation"
+import { useSoundContext } from "@/context/sound-context"
 
 export default function LanguageSwitch() {
   const localActive = useLocale()
   const router = useRouter()
   const pathname = usePathname()
+  const { playSwitch } = useSoundContext()
 
   const onChangeLanguage = (e: React.MouseEvent<HTMLButtonElement>) => {
+    playSwitch()
     const nextLocale = localActive === "en" ? "zh" : "en"
     const newPath = pathname.replace(/^\/(en|zh)/, `/${nextLocale}/`)
     router.replace(newPath, {

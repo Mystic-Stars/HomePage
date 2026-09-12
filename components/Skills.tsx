@@ -1,12 +1,12 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
+import Image from "next/image"
 import { headerLanguageMap } from "@/lib/data"
 import { useSectionInView } from "@/lib/hooks"
 import { motion } from "framer-motion"
 import SectionHeading from "./SectionHeading"
 import { useLocale, useTranslations } from "next-intl"
-import useSound from "use-sound"
 import { useSoundContext } from "@/context/sound-context"
 
 import {
@@ -25,7 +25,6 @@ import {
   SiVisualstudiocode,
   SiZedindustries,
   SiNodedotjs,
-  SiMinecraft,
   SiScratch,
 } from "react-icons/si"
 import { FaCode, FaGamepad } from "react-icons/fa6"
@@ -55,6 +54,36 @@ interface SkillCategory {
   id: "languages" | "frameworks" | "tools" | "creative"
   icon: React.ReactNode
   skills: SkillItem[]
+}
+
+// 严谨科学的技术栈生态共生网络
+const skillRelationships: Record<string, string[]> = {
+  // 现代 Web 全栈生态
+  TypeScript: ["JavaScript", "React", "Next.js", "Tauri", "Node.js"],
+  JavaScript: ["TypeScript", "HTML5", "CSS3", "React", "Next.js", "Node.js"],
+  HTML5: ["CSS3", "JavaScript", "React", "Tailwind CSS"],
+  CSS3: ["HTML5", "Tailwind CSS", "JavaScript", "React"],
+  React: ["Next.js", "TypeScript", "JavaScript", "Tailwind CSS", "Tauri"],
+  "Next.js": ["React", "TypeScript", "Tailwind CSS", "Node.js"],
+  "Tailwind CSS": ["HTML5", "CSS3", "React", "Next.js"],
+  "Node.js": ["TypeScript", "JavaScript", "Next.js", "React"],
+
+  // 系统级与跨平台客户端生态
+  Rust: ["Tauri", "Zed"],
+  Tauri: ["Rust", "TypeScript", "React", "Next.js", "Tailwind CSS"],
+
+  // 版本控制系统
+  Git: ["GitHub"],
+  GitHub: ["Git"],
+
+  // 现代开发环境
+  "VS Code": ["TypeScript", "Python"],
+  Zed: ["Rust"],
+  Python: ["VS Code"],
+
+  // 兴趣创造类
+  Minecraft: ["Scratch"],
+  Scratch: ["Minecraft"],
 }
 
 const skillCategories: SkillCategory[] = [
@@ -95,7 +124,19 @@ const skillCategories: SkillCategory[] = [
     id: "creative",
     icon: <FaGamepad className="text-xs" />,
     skills: [
-      { name: "Minecraft", icon: <SiMinecraft />, color: "#5B8C33" },
+      {
+        name: "Minecraft",
+        icon: (
+          <Image
+            src="/minecraft.png"
+            alt="Minecraft"
+            width={20}
+            height={20}
+            className="w-4 h-4 sm:w-5 sm:h-5 object-contain rounded-[4px]"
+          />
+        ),
+        color: "#5B8C33",
+      },
       { name: "Scratch", icon: <SiScratch />, color: "#F99B1D" },
     ],
   },
@@ -104,9 +145,9 @@ const skillCategories: SkillCategory[] = [
 export default function Skills() {
   const { ref } = useSectionInView("Skills")
   const activeLocale = useLocale()
-  const { soundEnabled } = useSoundContext()
-  const [playPop] = useSound("/bubble.wav", { volume: 0.5, soundEnabled })
+  const { playPop } = useSoundContext()
   const t = useTranslations("SkillSection")
+  const [hoveredSkill, setHoveredSkill] = useState<string | null>(null)
 
   let runningIndex = 0
 
@@ -122,7 +163,10 @@ export default function Skills() {
           : "My Skills"}
       </SectionHeading>
 
-      <div className="space-y-6 sm:space-y-7">
+      <div
+        className="space-y-6 sm:space-y-7"
+        onMouseLeave={() => setHoveredSkill(null)}
+      >
         {skillCategories.map((category) => (
           <div key={category.id} className="flex flex-col items-center">
             {/* 极简分类小标签 */}
@@ -131,44 +175,73 @@ export default function Skills() {
               <span>{t(category.id)}</span>
             </div>
 
-            {/* 纯净胶囊徽章流 */}
+            {/* 纯净胶囊徽章流与生态引力共振 */}
             <ul className="flex flex-wrap justify-center gap-2 sm:gap-3 text-sm sm:text-lg text-gray-800">
               {category.skills.map((skill) => {
                 const itemIndex = runningIndex++
+                const isCurrent = hoveredSkill === skill.name
+                const isConnected =
+                  hoveredSkill !== null &&
+                  !isCurrent &&
+                  Boolean(skillRelationships[hoveredSkill]?.includes(skill.name))
+                const isDimmed =
+                  hoveredSkill !== null && !isCurrent && !isConnected
+
                 return (
                   <motion.li
                     key={skill.name}
-                    className="bg-white borderBlack rounded-xl px-3.5 py-2 sm:px-5 sm:py-3 dark:bg-white/10 dark:text-white/80 cursor-pointer select-none active:scale-95 shadow-xs"
+                    className={`relative rounded-xl px-3.5 py-2 sm:px-5 sm:py-3 cursor-pointer select-none active:scale-95 transition-all duration-200 border ${
+                      isCurrent
+                        ? "bg-white dark:bg-gray-800 text-gray-950 dark:text-white border-transparent z-20 shadow-md"
+                        : isConnected
+                        ? "bg-white/95 dark:bg-gray-800/90 text-gray-950 dark:text-white border-gray-400/80 dark:border-gray-500/80 shadow-xs z-10"
+                        : isDimmed
+                        ? "bg-white/60 dark:bg-white/5 text-gray-400 dark:text-white/30 border-black/5 dark:border-white/5 opacity-35"
+                        : "bg-white border-black/10 dark:border-white/10 dark:bg-white/10 dark:text-white/80"
+                    }`}
+                    style={
+                      isCurrent && skill.color
+                        ? {
+                            boxShadow: `0 6px 22px -2px ${skill.color}35`,
+                            borderColor: skill.color,
+                          }
+                        : undefined
+                    }
                     variants={fadeInAnimationVariants}
                     initial="initial"
                     whileInView="animate"
                     viewport={{ once: true }}
                     custom={itemIndex}
-                    whileHover={{
-                      scale: 1.08,
-                      rotate: [-1, 1, -1, 0],
-                      transition: { duration: 0.2 },
+                    animate={{
+                      scale: isCurrent ? 1.06 : isConnected ? 1.02 : isDimmed ? 0.98 : 1,
+                      y: isCurrent ? -2.5 : isConnected ? -1 : 0,
                     }}
-                    whileTap={{ scale: 0.95 }}
-                    onHoverStart={() => {
-                      if (soundEnabled) {
-                        playPop()
-                      }
+                    transition={{ type: "spring", stiffness: 350, damping: 24 }}
+                    onMouseEnter={() => {
+                      setHoveredSkill(skill.name)
+                      playPop(0.04)
                     }}
                     onTap={() => {
-                      if (soundEnabled) {
-                        playPop()
-                      }
+                      setHoveredSkill((prev) => (prev === skill.name ? null : skill.name))
+                      playPop(0.05)
                     }}
                   >
                     <div className="flex items-center gap-1.5 sm:gap-2">
                       <span
-                        className="text-base sm:text-xl"
-                        style={skill.color ? { color: skill.color } : undefined}
+                        className={`text-base sm:text-xl transition-all duration-200 flex items-center justify-center shrink-0 ${
+                          isDimmed ? "grayscale opacity-60" : "grayscale-0 opacity-100"
+                        }`}
+                        style={
+                          skill.color && (!isDimmed || isCurrent)
+                            ? { color: skill.color }
+                            : undefined
+                        }
                       >
                         {skill.icon}
                       </span>
-                      <span className="text-xs sm:text-base font-medium">{skill.name}</span>
+                      <span className="text-xs sm:text-base font-medium">
+                        {skill.name}
+                      </span>
                     </div>
                   </motion.li>
                 )

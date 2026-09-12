@@ -1,6 +1,7 @@
 "use client"
 
 import { useTheme } from "@/context/theme-context"
+import { useSoundContext } from "@/context/sound-context"
 import React from "react"
 import { BsDisplay, BsMoon, BsSun } from "react-icons/bs"
 import { useLocale } from "next-intl"
@@ -8,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion"
 
 export default function ThemeSwitch() {
   const { theme, toggleTheme } = useTheme()
+  const { playClick } = useSoundContext()
   const activeLocale = useLocale()
 
   const getTitle = () => {
@@ -31,6 +33,7 @@ export default function ThemeSwitch() {
   }
 
   const handleToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    playClick()
     const rect = e.currentTarget.getBoundingClientRect()
     const x = e.clientX || rect.left + rect.width / 2
     const y = e.clientY || rect.top + rect.height / 2
