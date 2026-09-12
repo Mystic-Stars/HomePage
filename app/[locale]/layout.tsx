@@ -2,10 +2,11 @@ import Header from "@/components/Header"
 import "./globals.css"
 import { Inter } from "next/font/google"
 import ThemeContextProvider from "@/context/theme-context"
+import { SoundContextProvider } from "@/context/sound-context"
 import { ActionSectionContextProvider } from "@/context/action-section-context"
 import Footer from "@/components/Footer"
 import ThemeSwitch from "@/components/ThemeTwich"
-// import { usePathname } from "next/navigation"
+import SoundSwitch from "@/components/SoundSwitch"
 import LanguageSwitch from "@/components/LanguageSwitch"
 import { NextIntlClientProvider, useMessages } from "next-intl"
 import { unstable_setRequestLocale } from "next-intl/server"
@@ -26,10 +27,16 @@ export default function RootLayout({
 }) {
   unstable_setRequestLocale(locale)
   const messages = useMessages()
-  // const pathname = usePathname()
-  // const isProjectDetail = pathname.includes("projects")
+
   return (
-    <html lang={locale} className="!scroll-smooth">
+    <html lang={locale} className="!scroll-smooth" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');var isDark=t==='dark'||((!t||t==='system')&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(isDark){document.documentElement.classList.add('dark');}else{document.documentElement.classList.remove('dark');}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body
         className={`${inter.className} bg-gray-50 text-gray-950 relative dark:bg-gray-900 dark:text-gray-50 dark:text-opacity-90`}
       >
@@ -37,17 +44,20 @@ export default function RootLayout({
         <div className="bg-[#dbd7fb] absolute top-[-1rem] -z-10 left-[-35rem] h-[31.25rem] w-[50rem] rounded-full blur-[10rem] sm:w-[68.75rem] md:left-[-33rem] lg:left-[-28rem] xl:left-[-15rem] 2xl:left-[-5rem] dark:bg-[#433f68]"></div>
 
         <NextIntlClientProvider messages={messages}>
-          <ThemeContextProvider>
-            <ActionSectionContextProvider>
-              <Header />
-              {children}
-              <Footer />
-              <WidgetWrapper>
-                <ThemeSwitch />
-                <LanguageSwitch />
-              </WidgetWrapper>
-            </ActionSectionContextProvider>
-          </ThemeContextProvider>
+          <SoundContextProvider>
+            <ThemeContextProvider>
+              <ActionSectionContextProvider>
+                <Header />
+                {children}
+                <Footer />
+                <WidgetWrapper>
+                  <ThemeSwitch />
+                  <LanguageSwitch />
+                  <SoundSwitch />
+                </WidgetWrapper>
+              </ActionSectionContextProvider>
+            </ThemeContextProvider>
+          </SoundContextProvider>
         </NextIntlClientProvider>
       </body>
     </html>

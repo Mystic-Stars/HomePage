@@ -1,8 +1,8 @@
 {
     "IntroSection": {
         "hello_im": "Hi, my name is",
-        "name": "Mystic_Stars",
-        "short_intro": "",
+        "name": "Mystic Stars",
+        "short_intro": "A passionate individual who loves life and programming!",
         "download_cv": "Visit My Blog"
     },
     "SectionName": {
@@ -18,6 +18,10 @@
         "status": "Discover Infinity",
         "hero_greeting": "Hi, I'm Mystic Stars",
         "hero_desc": "Student developer based in Chengdu, focused on web interfaces and modern tooling. Striving for thoughtful craftsmanship, clean code, and documenting insights on my blog.",
+        "hero_subtitle": "Student Developer · Based in Chengdu (Chengdu, CN)",
+        "pillar_web": "Web & Frontend",
+        "pillar_python": "Python & Core",
+        "pillar_opensource": "Open Source & Writing",
         "role_student": "Student Dev",
         "role_explorer": "Web & Python",
         "role_minecraft": "Open Source",
@@ -65,6 +69,10 @@
         "type": "ENFJ-A",
         "title": "The Protagonist",
         "personality_traits": "Key Traits",
+        "trait_extraverted": "Extraverted",
+        "trait_intuitive": "Intuitive",
+        "trait_feeling": "Feeling",
+        "trait_judging": "Judging",
         "traits": {
             "trait1": "Charismatic Leader",
             "trait2": "Insightful Guide",
@@ -94,5 +102,13 @@
         "copy_rss": "Copy Link",
         "copied": "Copied",
         "open_feed": "Open XML"
+    },
+    "WidgetSection": {
+        "theme_system": "Theme: System",
+        "theme_light": "Theme: Light",
+        "theme_dark": "Theme: Dark",
+        "sound_enabled": "Sound: Enabled (Click to mute)",
+        "sound_muted": "Sound: Muted (Click to enable)",
+        "change_language": "Change Language"
     }
 }

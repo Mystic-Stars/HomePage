@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import SectionHeading from "./SectionHeading"
 import { useLocale, useTranslations } from "next-intl"
 import useSound from "use-sound"
+import { useSoundContext } from "@/context/sound-context"
 
 import {
   SiTypescript,
@@ -103,7 +104,8 @@ const skillCategories: SkillCategory[] = [
 export default function Skills() {
   const { ref } = useSectionInView("Skills")
   const activeLocale = useLocale()
-  const [playPop] = useSound("/bubble.wav", { volume: 0.5 })
+  const { soundEnabled } = useSoundContext()
+  const [playPop] = useSound("/bubble.wav", { volume: 0.5, soundEnabled })
   const t = useTranslations("SkillSection")
 
   let runningIndex = 0
@@ -148,7 +150,11 @@ export default function Skills() {
                       transition: { duration: 0.2 },
                     }}
                     whileTap={{ scale: 0.95 }}
-                    onHoverStart={() => playPop()}
+                    onHoverStart={() => {
+                      if (soundEnabled) {
+                        playPop()
+                      }
+                    }}
                   >
                     <div className="flex items-center gap-2">
                       <span

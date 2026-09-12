@@ -13,6 +13,7 @@ import { TypeAnimation } from "react-type-animation"
 import { useActiveSectionContext } from "@/context/action-section-context"
 import { useTranslations } from "next-intl"
 import useSound from "use-sound"
+import { useSoundContext } from "@/context/sound-context"
 import { FaPaperPlane } from "react-icons/fa";
 import { FaBilibili } from "react-icons/fa6";
 
@@ -25,7 +26,8 @@ export default function Intro() {
   const activeLocale = useLocale()
   const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext()
   const t = useTranslations("IntroSection")
-  const [playHover] = useSound("/bubble.wav", { volume: 0.5 })
+  const { soundEnabled } = useSoundContext()
+  const [playHover] = useSound("/bubble.wav", { volume: 0.5, soundEnabled })
 
   return (
     <section
@@ -52,8 +54,9 @@ export default function Intro() {
           </motion.div>
           <motion.span
             onHoverStart={() => {
-              console.log("sound")
-              playHover()
+              if (soundEnabled) {
+                playHover()
+              }
             }}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -108,12 +111,6 @@ export default function Intro() {
           </div>
         </motion.div>
         <p>{t("short_intro")}</p>
-        {activeLocale === "en" && (
-          <p>
-            I want to{" "}
-            <span className="italic font-bold">enjoy my life!</span>
-          </p>
-        )}
       </motion.h1>
 
       <motion.div

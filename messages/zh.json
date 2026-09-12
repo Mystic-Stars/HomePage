@@ -18,6 +18,10 @@
         "status": "Discover Infinity",
         "hero_greeting": "你好，我是 Mystic Stars",
         "hero_desc": "来自成都的学生开发者，专注于 Web 交互与现代工具开发。追求极致的细节体验，喜欢探索新事物、编写整洁代码，并在博客中记录每一次成长与思考。",
+        "hero_subtitle": "学生开发者 · 坐标成都 (Chengdu, CN)",
+        "pillar_web": "Web & 前端",
+        "pillar_python": "Python & 核心",
+        "pillar_opensource": "开源与记录",
         "role_student": "学生开发者",
         "role_explorer": "Web & Python",
         "role_minecraft": "开源爱好者",
@@ -65,6 +69,10 @@
         "type": "ENFJ-A",
         "title": "主人公",
         "personality_traits": "性格特质",
+        "trait_extraverted": "外向 Extraverted",
+        "trait_intuitive": "直觉 Intuitive",
+        "trait_feeling": "情感 Feeling",
+        "trait_judging": "判断 Judging",
         "traits": {
             "trait1": "感召力与领导才能",
             "trait2": "乐于启发的教导者",
@@ -94,5 +102,13 @@
         "copy_rss": "复制链接",
         "copied": "已复制",
         "open_feed": "打开 XML"
+    },
+    "WidgetSection": {
+        "theme_system": "主题：跟随系统",
+        "theme_light": "主题：浅色模式",
+        "theme_dark": "主题：深色模式",
+        "sound_enabled": "音效：已开启（点击静音）",
+        "sound_muted": "音效：已静音（点击开启）",
+        "change_language": "切换语言"
     }
 }

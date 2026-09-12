@@ -127,7 +127,7 @@ export default function About() {
                   {t("hero_greeting")}
                 </h3>
                 <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mt-0.5">
-                  学生开发者 · 坐标成都 (Chengdu, CN)
+                  {t("hero_subtitle")}
                 </p>
               </div>
             </div>
@@ -145,7 +145,7 @@ export default function About() {
               </div>
               <div className="min-w-0">
                 <div className="text-xs font-semibold text-gray-800 dark:text-gray-200 truncate">
-                  Web & 前端
+                  {t("pillar_web")}
                 </div>
                 <div className="text-[10px] text-gray-400 dark:text-gray-500 truncate font-mono">
                   Next.js · React
@@ -159,7 +159,7 @@ export default function About() {
               </div>
               <div className="min-w-0">
                 <div className="text-xs font-semibold text-gray-800 dark:text-gray-200 truncate">
-                  Python & 核心
+                  {t("pillar_python")}
                 </div>
                 <div className="text-[10px] text-gray-400 dark:text-gray-500 truncate font-mono">
                   Script · Tooling
@@ -173,7 +173,7 @@ export default function About() {
               </div>
               <div className="min-w-0">
                 <div className="text-xs font-semibold text-gray-800 dark:text-gray-200 truncate">
-                  开源与记录
+                  {t("pillar_opensource")}
                 </div>
                 <div className="text-[10px] text-gray-400 dark:text-gray-500 truncate font-mono">
                   Blog · GitHub
@@ -213,7 +213,7 @@ export default function About() {
             <div className="space-y-2.5 relative z-10">
               <div>
                 <div className="flex justify-between text-[11px] font-medium text-gray-600 dark:text-gray-300 mb-1">
-                  <span>外向 Extraverted</span>
+                  <span>{tMBTI("trait_extraverted")}</span>
                   <span className="font-mono font-semibold text-gray-900 dark:text-white">76%</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
@@ -223,7 +223,7 @@ export default function About() {
 
               <div>
                 <div className="flex justify-between text-[11px] font-medium text-gray-600 dark:text-gray-300 mb-1">
-                  <span>直觉 Intuitive</span>
+                  <span>{tMBTI("trait_intuitive")}</span>
                   <span className="font-mono font-semibold text-gray-900 dark:text-white">68%</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
@@ -233,7 +233,7 @@ export default function About() {
 
               <div>
                 <div className="flex justify-between text-[11px] font-medium text-gray-600 dark:text-gray-300 mb-1">
-                  <span>情感 Feeling</span>
+                  <span>{tMBTI("trait_feeling")}</span>
                   <span className="font-mono font-semibold text-gray-900 dark:text-white">72%</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
@@ -243,7 +243,7 @@ export default function About() {
 
               <div>
                 <div className="flex justify-between text-[11px] font-medium text-gray-600 dark:text-gray-300 mb-1">
-                  <span>判断 Judging</span>
+                  <span>{tMBTI("trait_judging")}</span>
                   <span className="font-mono font-semibold text-gray-900 dark:text-white">81%</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
