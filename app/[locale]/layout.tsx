@@ -8,9 +8,14 @@ import ThemeSwitch from "@/components/ThemeTwich"
 // import { usePathname } from "next/navigation"
 import LanguageSwitch from "@/components/LanguageSwitch"
 import { NextIntlClientProvider, useMessages } from "next-intl"
+import { unstable_setRequestLocale } from "next-intl/server"
 import WidgetWrapper from "@/components/WidgetWrapper"
 
 const inter = Inter({ subsets: ["latin"] })
+
+export function generateStaticParams() {
+  return [{ locale: "en" }, { locale: "zh" }]
+}
 
 export default function RootLayout({
   children,
@@ -19,6 +24,7 @@ export default function RootLayout({
   children: React.ReactNode
   params: { locale: string }
 }) {
+  unstable_setRequestLocale(locale)
   const messages = useMessages()
   // const pathname = usePathname()
   // const isProjectDetail = pathname.includes("projects")

@@ -4,17 +4,25 @@ import About from "@/components/About"
 import Projects from "@/components/Projects"
 import Skills from "@/components/Skills"
 // import Experience from "@/components/Experience"
-import { isMobileDevice } from "@/lib/server-utils"
 // import Contact from "@/components/Contact"
 import Subscribe from "@/components/Subscribe"
+import { unstable_setRequestLocale } from "next-intl/server"
 
 export const metadata = {
   title: "MysticStars | Homepage",
   description: "A student developer's homepage.",
 }
 
-export default function Home() {
-  const isMobile = isMobileDevice()
+export function generateStaticParams() {
+  return [{ locale: "en" }, { locale: "zh" }]
+}
+
+export default function Home({
+  params: { locale },
+}: {
+  params: { locale: string }
+}) {
+  unstable_setRequestLocale(locale)
 
   return (
     <main className="flex flex-col items-center justify-center px-4 overflow-x-hidden">
@@ -24,7 +32,7 @@ export default function Home() {
       <Projects />
       <Skills />
       <Subscribe />
-      {/* <Experience isMobile={isMobile} /> */}      
+      {/* <Experience isMobile={false} /> */}      
       {/* <Contact /> */}
     </main>
   )
