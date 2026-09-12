@@ -15,8 +15,8 @@ export function SoundContextProvider({
 }: {
   children: React.ReactNode
 }) {
-  // Default is sound enabled
-  const [soundEnabled, setSoundEnabled] = useState(true)
+  // Default is sound muted
+  const [soundEnabled, setSoundEnabled] = useState(false)
 
   useEffect(() => {
     const stored = window.localStorage.getItem("sound_enabled")

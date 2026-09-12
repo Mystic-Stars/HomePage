@@ -5,12 +5,9 @@ import ThemeContextProvider from "@/context/theme-context"
 import { SoundContextProvider } from "@/context/sound-context"
 import { ActionSectionContextProvider } from "@/context/action-section-context"
 import Footer from "@/components/Footer"
-import ThemeSwitch from "@/components/ThemeTwich"
-import SoundSwitch from "@/components/SoundSwitch"
-import LanguageSwitch from "@/components/LanguageSwitch"
+import ClientControls from "@/components/ClientControls"
 import { NextIntlClientProvider, useMessages } from "next-intl"
 import { unstable_setRequestLocale } from "next-intl/server"
-import WidgetWrapper from "@/components/WidgetWrapper"
 
 import type { Viewport } from "next"
 
@@ -65,11 +62,7 @@ export default function RootLayout({
                 <Header />
                 {children}
                 <Footer />
-                <WidgetWrapper>
-                  <ThemeSwitch />
-                  <LanguageSwitch />
-                  <SoundSwitch />
-                </WidgetWrapper>
+                <ClientControls />
               </ActionSectionContextProvider>
             </ThemeContextProvider>
           </SoundContextProvider>

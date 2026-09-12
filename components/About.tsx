@@ -1,12 +1,14 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import SectionHeading from "./SectionHeading"
 import { motion } from "framer-motion"
 import { useSectionInView } from "@/lib/hooks"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import Image from "next/image"
 import Link from "next/link"
+import useSound from "use-sound"
+import { useSoundContext } from "@/context/sound-context"
 
 import {
   FaGithub,
@@ -43,14 +45,39 @@ const cardEntranceVariants = {
 const cardBaseStyle =
   "group relative rounded-2xl sm:rounded-3xl p-4 sm:p-6 bg-white/70 dark:bg-gray-900/50 backdrop-blur-md border border-gray-200/80 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] transition-all duration-200 ease-out active:scale-[0.99] hover:-translate-y-0.5 overflow-hidden flex flex-col justify-between"
 
+interface BentoCardProps {
+  children: React.ReactNode
+  className?: string
+  custom?: number
+}
+
+function BentoCard({ children, className = "", custom = 0 }: BentoCardProps) {
+  return (
+    <motion.div
+      variants={cardEntranceVariants}
+      initial="initial"
+      whileInView="animate"
+      viewport={{ once: true }}
+      custom={custom}
+      className={`${cardBaseStyle} ${className}`}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
 export default function About() {
   const { ref } = useSectionInView("About")
   const t = useTranslations("AboutSection")
   const tMBTI = useTranslations("MBTISection")
   const sectionLan = useTranslations("SectionName")
+  const activeLocale = useLocale()
+  const { soundEnabled } = useSoundContext()
+  const [playPop] = useSound("/bubble.wav", { volume: 0.5, soundEnabled })
 
   const [timeString, setTimeString] = useState<string>("")
   const [copied, setCopied] = useState(false)
+  const [timeCopied, setTimeCopied] = useState(false)
 
   useEffect(() => {
     const updateTime = () => {
@@ -72,10 +99,23 @@ export default function About() {
   const handleCopyEmail = async () => {
     try {
       await navigator.clipboard.writeText(t("contact_email"))
+      if (soundEnabled) playPop()
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
       console.error("Failed to copy:", err)
+    }
+  }
+
+  const handleCopyTime = async () => {
+    try {
+      const fullTime = `${timeString} CST (UTC+8, Chengdu/Shanghai)`
+      await navigator.clipboard.writeText(fullTime)
+      if (soundEnabled) playPop()
+      setTimeCopied(true)
+      setTimeout(() => setTimeCopied(false), 1800)
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -93,18 +133,14 @@ export default function About() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 auto-rows-auto">
         {/* ================= CARD 1: Hero Bio (2x2 on desktop) ================= */}
-        <motion.div
-          variants={cardEntranceVariants}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
+        <BentoCard
           custom={0}
-          className={`${cardBaseStyle} col-span-1 sm:col-span-2 lg:col-span-2 lg:row-span-2`}
+          className="col-span-1 sm:col-span-2 lg:col-span-2 lg:row-span-2"
         >
           <div>
             <div className="flex items-center justify-between gap-2 mb-4">
               <div className="inline-flex items-center gap-2 rounded-full border border-gray-200/80 dark:border-gray-700/80 bg-gray-50/80 dark:bg-gray-800/90 px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-200 shadow-xs">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block shadow-[0_0_8px_rgba(16,185,129,0.6)] animate-pulse" />
                 <span>{t("status")}</span>
               </div>
               <span className="text-[11px] font-mono tracking-widest text-gray-400 dark:text-gray-400 uppercase font-semibold">
@@ -181,16 +217,12 @@ export default function About() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </BentoCard>
 
         {/* ================= CARD 2: MBTI (1x2 on desktop) ================= */}
-        <motion.div
-          variants={cardEntranceVariants}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
+        <BentoCard
           custom={1}
-          className={`${cardBaseStyle} col-span-1 sm:col-span-2 lg:col-span-1 lg:row-span-2 relative`}
+          className="col-span-1 sm:col-span-2 lg:col-span-1 lg:row-span-2 relative"
         >
           <div>
             <div className="flex items-center justify-between mb-3">
@@ -209,7 +241,7 @@ export default function About() {
               {tMBTI("personality_traits")}
             </p>
 
-            {/* Personality Spectrum Bars */}
+            {/* Personality Spectrum Bars with dynamic spring filling animation */}
             <div className="space-y-2.5 relative z-10">
               <div>
                 <div className="flex justify-between text-[11px] font-medium text-gray-600 dark:text-gray-300 mb-1">
@@ -217,7 +249,13 @@ export default function About() {
                   <span className="font-mono font-semibold text-gray-900 dark:text-white">76%</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                  <div className="h-full rounded-full bg-emerald-500/80 w-[76%]" />
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "76%" }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    className="h-full rounded-full bg-emerald-500/80"
+                  />
                 </div>
               </div>
 
@@ -227,7 +265,13 @@ export default function About() {
                   <span className="font-mono font-semibold text-gray-900 dark:text-white">68%</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                  <div className="h-full rounded-full bg-emerald-500/80 w-[68%]" />
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "68%" }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                    className="h-full rounded-full bg-emerald-500/80"
+                  />
                 </div>
               </div>
 
@@ -237,7 +281,13 @@ export default function About() {
                   <span className="font-mono font-semibold text-gray-900 dark:text-white">72%</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                  <div className="h-full rounded-full bg-emerald-500/80 w-[72%]" />
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "72%" }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    className="h-full rounded-full bg-emerald-500/80"
+                  />
                 </div>
               </div>
 
@@ -247,7 +297,13 @@ export default function About() {
                   <span className="font-mono font-semibold text-gray-900 dark:text-white">81%</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                  <div className="h-full rounded-full bg-emerald-500/80 w-[81%]" />
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "81%" }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    className="h-full rounded-full bg-emerald-500/80"
+                  />
                 </div>
               </div>
             </div>
@@ -274,16 +330,12 @@ export default function About() {
               className="w-full object-contain"
             />
           </div>
-        </motion.div>
+        </BentoCard>
 
         {/* ================= CARD 3: Location & Clock (1x1 on desktop) ================= */}
-        <motion.div
-          variants={cardEntranceVariants}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
+        <BentoCard
           custom={2}
-          className={`${cardBaseStyle} col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1`}
+          className="col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1 cursor-pointer"
         >
           <div className="flex items-start justify-between gap-2">
             <div>
@@ -299,27 +351,30 @@ export default function About() {
             </span>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 flex items-end justify-between">
+          <div
+            onClick={handleCopyTime}
+            title={timeCopied ? "Copied!" : "Click to copy current timestamp"}
+            className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 flex items-end justify-between select-none"
+          >
             <div>
               <div className="font-mono text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
                 <FiClock className="w-4 h-4 text-gray-400" />
                 <span>{timeString || "00:00:00"}</span>
+                {timeCopied && (
+                  <FiCheck className="w-3.5 h-3.5 text-emerald-500 animate-in fade-in" />
+                )}
               </div>
               <p className="text-[11px] font-mono text-gray-500 dark:text-gray-400 mt-0.5">
                 {t("location_timezone")}
               </p>
             </div>
           </div>
-        </motion.div>
+        </BentoCard>
 
         {/* ================= CARD 4: Quick Contact (1x1 on desktop) ================= */}
-        <motion.div
-          variants={cardEntranceVariants}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
+        <BentoCard
           custom={3}
-          className={`${cardBaseStyle} col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1`}
+          className="col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5 min-w-0">
@@ -340,33 +395,38 @@ export default function About() {
           <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 flex gap-2">
             <button
               onClick={handleCopyEmail}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-medium bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 active:scale-[0.98] transition-all duration-150"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-medium bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 active:scale-[0.96] transition-all duration-150"
             >
               {copied ? (
-                <FiCheck className="w-3.5 h-3.5 text-emerald-500" />
+                <motion.div
+                  initial={{ scale: 0.5 }}
+                  animate={{ scale: 1 }}
+                  className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium"
+                >
+                  <FiCheck className="w-3.5 h-3.5" />
+                  <span>{t("contact_copied")}</span>
+                </motion.div>
               ) : (
-                <FiCopy className="w-3.5 h-3.5 text-gray-500" />
+                <div className="flex items-center gap-1">
+                  <FiCopy className="w-3.5 h-3.5 text-gray-500" />
+                  <span>{t("contact_copy")}</span>
+                </div>
               )}
-              <span>{copied ? t("contact_copied") : t("contact_copy")}</span>
             </button>
             <a
               href={`mailto:${t("contact_email")}`}
-              className="inline-flex items-center justify-center p-2 rounded-xl bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:opacity-90 active:scale-[0.98] transition-all duration-150"
+              className="inline-flex items-center justify-center p-2 rounded-xl bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:opacity-90 active:scale-[0.96] transition-all duration-150"
               aria-label="Send email"
             >
               <FiSend className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-150" />
             </a>
           </div>
-        </motion.div>
+        </BentoCard>
 
         {/* ================= CARD 5: GitHub Contributions (2x1 on desktop) ================= */}
-        <motion.div
-          variants={cardEntranceVariants}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
+        <BentoCard
           custom={4}
-          className={`${cardBaseStyle} col-span-1 sm:col-span-2 lg:col-span-2 lg:row-span-1 relative`}
+          className="col-span-1 sm:col-span-2 lg:col-span-2 lg:row-span-1 relative"
         >
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2.5">
@@ -399,21 +459,21 @@ export default function About() {
             label={t("github_repos")}
             className="w-full pt-1"
           />
-        </motion.div>
+        </BentoCard>
 
         {/* ================= CARD 6: Minecraft (1x1 on desktop) ================= */}
-        <motion.div
-          variants={cardEntranceVariants}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
+        <BentoCard
           custom={5}
-          className={`${cardBaseStyle} col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1 relative overflow-hidden`}
+          className="col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1 relative overflow-hidden group/mc"
         >
           <div>
             <div className="flex items-center justify-between gap-2 mb-3 relative z-10">
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="relative w-8 h-8 rounded-xl overflow-hidden border border-emerald-500/20 shrink-0 shadow-xs">
+                <motion.div
+                  whileHover={{ scale: 1.15, rotate: 6 }}
+                  transition={{ type: "spring", stiffness: 350, damping: 15 }}
+                  className="relative w-8 h-8 rounded-xl overflow-hidden border border-emerald-500/20 shrink-0 shadow-xs cursor-pointer"
+                >
                   <Image
                     src="/minecraft.png"
                     alt="Minecraft"
@@ -421,7 +481,7 @@ export default function About() {
                     height={32}
                     className="w-full h-full object-cover"
                   />
-                </div>
+                </motion.div>
                 <div className="min-w-0">
                   <span className="text-sm font-semibold text-gray-900 dark:text-white truncate block">
                     {t("minecraft_title")}
@@ -455,7 +515,7 @@ export default function About() {
 
           <div className="pt-2.5 border-t border-gray-100 dark:border-gray-800 mt-auto flex items-center justify-between text-[11px] relative z-10">
             <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 min-w-0">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 shadow-[0_0_6px_rgba(16,185,129,0.5)]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 shadow-[0_0_6px_rgba(16,185,129,0.5)] animate-pulse" />
               <span className="truncate font-mono text-[11px]">Hypixel · hjmc</span>
             </div>
             <span className="shrink-0 text-[10px] font-mono font-medium text-emerald-600 dark:text-emerald-400">
@@ -463,8 +523,8 @@ export default function About() {
             </span>
           </div>
 
-          {/* User Requested Minecraft Logo Watermark */}
-          <div className="absolute right-[-6px] bottom-3.5 w-36 sm:w-40 pointer-events-none opacity-15 dark:opacity-10 z-0 select-none">
+          {/* Minecraft Logo Watermark with subtle group-hover float */}
+          <div className="absolute right-[-6px] bottom-3.5 w-36 sm:w-40 pointer-events-none opacity-15 dark:opacity-10 z-0 select-none transition-transform duration-300 group-hover/mc:scale-105 group-hover/mc:opacity-25">
             <Image
               src="/minecraft-logo.png"
               alt="Minecraft Logo"
@@ -473,16 +533,12 @@ export default function About() {
               className="w-full object-contain"
             />
           </div>
-        </motion.div>
+        </BentoCard>
 
         {/* ================= CARD 7: Anime (1x1 on desktop) ================= */}
-        <motion.div
-          variants={cardEntranceVariants}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
+        <BentoCard
           custom={6}
-          className={`${cardBaseStyle} col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1 relative overflow-hidden`}
+          className="col-span-1 sm:col-span-1 lg:col-span-1 lg:row-span-1 relative overflow-hidden"
         >
           <div>
             <div className="flex items-center justify-between gap-2 mb-3 relative z-10">
@@ -534,16 +590,12 @@ export default function About() {
               <FiArrowUpRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-150" />
             </Link>
           </div>
-        </motion.div>
+        </BentoCard>
 
         {/* ================= CARD 8: Personal Blog (2x1 on desktop) ================= */}
-        <motion.div
-          variants={cardEntranceVariants}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
+        <BentoCard
           custom={7}
-          className={`${cardBaseStyle} col-span-1 sm:col-span-2 lg:col-span-2 lg:row-span-1`}
+          className="col-span-1 sm:col-span-2 lg:col-span-2 lg:row-span-1"
         >
           <div>
             <div className="flex items-center justify-between mb-3">
@@ -587,16 +639,12 @@ export default function About() {
               {t("blog_tag3")}
             </span>
           </div>
-        </motion.div>
+        </BentoCard>
 
         {/* ================= CARD 9: Bilibili (2x1 on desktop) ================= */}
-        <motion.div
-          variants={cardEntranceVariants}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
+        <BentoCard
           custom={8}
-          className={`${cardBaseStyle} col-span-1 sm:col-span-2 lg:col-span-2 lg:row-span-1`}
+          className="col-span-1 sm:col-span-2 lg:col-span-2 lg:row-span-1"
         >
           <div>
             <div className="flex items-center justify-between mb-3">
@@ -640,7 +688,7 @@ export default function About() {
               {t("bilibili_tag3")}
             </span>
           </div>
-        </motion.div>
+        </BentoCard>
       </div>
     </motion.section>
   )
