@@ -74,16 +74,24 @@
         "learn_more": "Explore on 16personalities"
     },
     "SkillSection": {
-        "Python": "Python Programming",
-        "Web": "Web Development",
-        "Git": "Version Control",
-        "Github": "Code Hosting",
-        "Minecraft": "Game Development",
-        "Scratch": "Visual Programming"
+        "languages": "Programming Languages",
+        "frameworks": "Frameworks & Desktop",
+        "tools": "Tools & Platforms",
+        "creative": "Creative & Gaming"
     },
     "ProjectSection": {
         "view_all": "View All Projects",
         "code": "View Code",
         "visit": "Live Demo"
+    },
+    "SubscribeSection": {
+        "desc": "Subscribe to my blog via Follow app or any standard RSS feed reader.",
+        "follow_title": "Follow",
+        "follow_desc": "Follow feed on app.follow.is with cross-device sync",
+        "follow_btn": "Subscribe on Follow",
+        "rss_title": "RSS Feed",
+        "copy_rss": "Copy Link",
+        "copied": "Copied",
+        "open_feed": "Open XML"
     }
 }

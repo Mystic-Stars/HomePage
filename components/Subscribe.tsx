@@ -1,17 +1,43 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { motion } from "framer-motion"
 import { FaRss } from "react-icons/fa6"
-import { useLocale } from "next-intl"
-import { FiCopy, FiCheck, FiExternalLink } from "react-icons/fi"
+import { FiCopy, FiCheck, FiArrowUpRight, FiExternalLink } from "react-icons/fi"
+import { useLocale, useTranslations } from "next-intl"
+import { headerLanguageMap } from "@/lib/data"
+import { useSectionInView } from "@/lib/hooks"
+import SectionHeading from "./SectionHeading"
 
-const RSS_LINK = 'https://www.mysticstars.cn/rss.xml'
-const FOLLOW_LINK = 'https://app.follow.is/share/feeds/65706263472449536'
+const RSS_LINK = "https://www.mysticstars.cn/rss.xml"
+const FOLLOW_LINK = "https://app.follow.is/share/feeds/65706263472449536"
+
+// Follow 官方矢量图标 (精准保真)
+function FollowOfficialIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="Follow"
+    >
+      <path
+        fill="#FF5C00"
+        d="M5.382 0h13.236A5.37 5.37 0 0 1 24 5.383v13.235A5.37 5.37 0 0 1 18.618 24H5.382A5.37 5.37 0 0 1 0 18.618V5.383A5.37 5.37 0 0 1 5.382.001Z"
+      />
+      <path
+        fill="#ffffff"
+        d="M13.269 17.31a1.813 1.813 0 1 0-3.626.002 1.813 1.813 0 0 0 3.626-.002m-.535-6.527H7.213a1.813 1.813 0 1 0 0 3.624h5.521a1.813 1.813 0 1 0 0-3.624m4.417-4.712H8.87a1.813 1.813 0 1 0 0 3.625h8.283a1.813 1.813 0 1 0 0-3.624z"
+      />
+    </svg>
+  )
+}
 
 export default function Subscribe() {
-  const [copied, setCopied] = useState(false)
+  const { ref } = useSectionInView("Subscribe", 0.5)
   const activeLocale = useLocale()
+  const t = useTranslations("SubscribeSection")
+  const [copied, setCopied] = useState(false)
 
   const handleCopyRSS = async () => {
     try {
@@ -19,81 +45,105 @@ export default function Subscribe() {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
-      console.error('Failed to copy RSS link:', err)
+      console.error("Failed to copy RSS link:", err)
     }
   }
 
   return (
-    <section id="subscribe" className="scroll-mt-28 mb-28">
+    <section
+      id="subscribe"
+      ref={ref}
+      className="max-w-[45rem] w-full scroll-mt-28 mb-28 px-4"
+    >
+      <SectionHeading>
+        {activeLocale === "zh"
+          ? headerLanguageMap["Subscribe"]
+          : "Subscribe"}
+      </SectionHeading>
+
+      <p className="text-sm text-gray-500 dark:text-gray-400 text-center -mt-4 mb-7 max-w-md mx-auto">
+        {t("desc")}
+      </p>
+
+      {/* 与全局 About 卡片风格一致的现代 Bento 卡片 */}
       <motion.div
-        className="max-w-[45rem] mx-auto"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        className="rounded-3xl p-5 sm:p-6 bg-white/70 dark:bg-gray-900/50 backdrop-blur-md border border-gray-200/80 dark:border-gray-800 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)] transition-all duration-200"
       >
-        <div className="bg-white dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-3xl p-8 relative overflow-hidden shadow-sm">
-          <div className="relative z-10 flex flex-col items-center text-center gap-6">
-            <div>
-              <h2 className="text-2xl font-medium mb-3 text-gray-800 dark:text-white">
-                {activeLocale === "zh" ? "订阅我的博客" : "Subscribe to My Blog"}
-              </h2>
-              
-              <p className="text-gray-500 dark:text-gray-400 text-sm max-w-md mx-auto">
-                {activeLocale === "zh" 
-                  ? "通过 RSS 订阅获取最新的博客文章和技术分享" 
-                  : "Get the latest blog posts and tech insights via RSS feed"}
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-4 w-full max-w-xl">
-              <div className="relative">
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl py-3 px-4 border border-gray-200 dark:border-gray-700 flex items-center gap-3 w-full">
-                  <FaRss className="w-4 h-4 flex-shrink-0 text-gray-400 dark:text-gray-500" />
-                  <span className="text-gray-600 dark:text-gray-300 text-sm font-mono truncate">
-                    {RSS_LINK}
-                  </span>
-                </div>
+        <div className="flex flex-col gap-4">
+          {/* Follow 订阅项 */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-gray-100 dark:border-gray-800">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="p-2 rounded-2xl bg-gray-100 dark:bg-gray-800 border border-gray-200/60 dark:border-gray-700/60 shrink-0">
+                <FollowOfficialIcon className="w-5 h-5" />
               </div>
-
-              <div className="flex gap-3 justify-center">
-                <motion.button
-                  onClick={handleCopyRSS}
-                  className="group flex items-center gap-2 px-5 py-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  {copied ? (
-                    <FiCheck className="w-4 h-4 text-green-500" />
-                  ) : (
-                    <FiCopy className="w-4 h-4 text-gray-400 dark:text-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-400 transition-colors duration-200" />
-                  )}
-                  <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                    {copied 
-                      ? (activeLocale === "zh" ? "已复制" : "Copied") 
-                      : (activeLocale === "zh" ? "复制" : "Copy")}
-                  </span>
-                </motion.button>
-
-                <motion.a
-                  href={FOLLOW_LINK}
-                  target="_blank"
-                  className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl hover:bg-gray-800 dark:hover:bg-gray-50 transition-all duration-200"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <FiExternalLink className="w-4 h-4" />
-                  <span className="text-sm font-medium">
-                    {activeLocale === "zh" ? "Follow" : "Follow"}
-                  </span>
-                </motion.a>
+              <div className="min-w-0">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                  {t("follow_title")}
+                </h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                  {t("follow_desc")}
+                </p>
               </div>
             </div>
+
+            <a
+              href={FOLLOW_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-1.5 py-2 px-4 rounded-xl text-xs font-medium bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:opacity-90 active:scale-[0.98] transition-all duration-150 shrink-0 cursor-pointer"
+            >
+              <span>{t("follow_btn")}</span>
+              <FiArrowUpRight className="w-3.5 h-3.5" />
+            </a>
           </div>
 
-          {/* 装饰性背景元素 - 更微妙的效果 */}
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-50/50 to-white dark:from-gray-800/50 dark:to-gray-900/50" />
+          {/* RSS 订阅项 */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="p-2 rounded-2xl bg-gray-100 dark:bg-gray-800 text-orange-500 border border-gray-200/60 dark:border-gray-700/60 shrink-0">
+                <FaRss className="w-5 h-5" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                  {t("rss_title")}
+                </h3>
+                <span className="text-xs font-mono text-gray-500 dark:text-gray-400 block truncate select-all">
+                  {RSS_LINK}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={handleCopyRSS}
+                className="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-medium bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 active:scale-[0.98] transition-all duration-150 cursor-pointer"
+              >
+                {copied ? (
+                  <FiCheck className="w-3.5 h-3.5 text-emerald-500" />
+                ) : (
+                  <FiCopy className="w-3.5 h-3.5 text-gray-500" />
+                )}
+                <span>{copied ? t("copied") : t("copy_rss")}</span>
+              </button>
+
+              <a
+                href={RSS_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center p-2 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 active:scale-[0.98] transition-all duration-150"
+                aria-label="Open RSS XML"
+              >
+                <FiExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
         </div>
       </motion.div>
     </section>
   )
-} 
+}
+ 

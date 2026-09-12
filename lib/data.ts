@@ -93,13 +93,57 @@ export const projectsData = [
     },
 ]
 
-export const skillsData = [
-    "HTML",
-    "CSS",
-    "Python",
-    "Web",
-    "Git",
-    "Github",
-    "Minecraft",
-    "Scratch",
-] 
+export interface SkillItem {
+    name: string;
+    iconName: string;
+    color: string;
+    tag: string;
+}
+
+export interface SkillCategoryGroup {
+    id: "languages" | "frameworks" | "tools" | "creative";
+    skills: SkillItem[];
+}
+
+export const skillsCategories: SkillCategoryGroup[] = [
+    {
+        id: "languages",
+        skills: [
+            { name: "TypeScript", iconName: "SiTypescript", color: "#3178C6", tag: "Full-Stack" },
+            { name: "JavaScript", iconName: "SiJavascript", color: "#F7DF1E", tag: "Frontend" },
+            { name: "Rust", iconName: "SiRust", color: "#CE412B", tag: "Systems & Tauri" },
+            { name: "Python", iconName: "SiPython", color: "#3776AB", tag: "Automation & Backend" },
+            { name: "HTML5", iconName: "SiHtml5", color: "#E34F26", tag: "Markup" },
+            { name: "CSS3", iconName: "SiCss3", color: "#1572B6", tag: "Styles & Motion" },
+        ],
+    },
+    {
+        id: "frameworks",
+        skills: [
+            { name: "Next.js", iconName: "SiNextdotjs", color: "#000000", tag: "Full-Stack SSR" },
+            { name: "React", iconName: "SiReact", color: "#61DAFB", tag: "UI Components" },
+            { name: "Tauri", iconName: "SiTauri", color: "#24C8DB", tag: "Desktop Cross-Platform" },
+            { name: "Tailwind CSS", iconName: "SiTailwindcss", color: "#06B6D4", tag: "Modern UI" },
+        ],
+    },
+    {
+        id: "tools",
+        skills: [
+            { name: "Git", iconName: "SiGit", color: "#F05032", tag: "Version Control" },
+            { name: "GitHub", iconName: "SiGithub", color: "#6e5494", tag: "Open Source" },
+            { name: "VS Code", iconName: "SiVisualstudiocode", color: "#007ACC", tag: "Dev Environment" },
+            { name: "Zed", iconName: "SiZedindustries", color: "#0845F5", tag: "High-Perf Editor" },
+            { name: "Node.js", iconName: "SiNodedotjs", color: "#5FA04E", tag: "Runtime & Tooling" },
+        ],
+    },
+    {
+        id: "creative",
+        skills: [
+            { name: "Minecraft", iconName: "SiMinecraft", color: "#5B8C33", tag: "Sandbox & Community" },
+            { name: "Scratch", iconName: "SiScratch", color: "#F99B1D", tag: "Visual Logic" },
+        ],
+    },
+];
+
+export const skillsData = skillsCategories.flatMap((cat) => cat.skills.map((s) => s.name));
+

@@ -74,16 +74,24 @@
         "learn_more": "在 16personalities 深入了解"
     },
     "SkillSection": {
-        "Python": "熟悉Python编程",
-        "Web": "Web开发",
-        "Git": "版本控制",
-        "Github": "代码托管",
-        "Minecraft": "游戏开发",
-        "Scratch": "图形化编程"
+        "languages": "编程语言",
+        "frameworks": "框架与跨端",
+        "tools": "工具与平台",
+        "creative": "兴趣与探索"
     },
     "ProjectSection": {
         "view_all": "查看所有项目",
         "code": "查看代码",
         "visit": "在线演示"
+    },
+    "SubscribeSection": {
+        "desc": "支持通过 Follow 信息流或任意标准 RSS 阅读器订阅我的博客内容。",
+        "follow_title": "Follow",
+        "follow_desc": "在 app.follow.is 关注订阅源，跨端同步阅读",
+        "follow_btn": "在 Follow 订阅",
+        "rss_title": "RSS 订阅源",
+        "copy_rss": "复制链接",
+        "copied": "已复制",
+        "open_feed": "打开 XML"
     }
 }
