@@ -97,7 +97,22 @@
         "subtitle": "Selected open-source projects and creative works",
         "view_all": "View All Projects",
         "code": "View Code",
-        "visit": "Live Demo"
+        "visit": "Live Demo",
+        "peek": "Details",
+        "peek_tooltip": "Explore screenshots and technical architecture",
+        "gallery_tab": "Gallery",
+        "arch_tab": "Architecture",
+        "sandbox_tab": "Live Preview",
+        "features_title": "Core Features",
+        "specs_title": "Specifications",
+        "architecture_title": "System Architecture",
+        "close": "Close",
+        "open_external": "Visit Live",
+        "view_code": "View Code",
+        "slide_hint": "Swipe or use arrow keys · ESC to close",
+        "copied": "Link copied",
+        "copy_link": "Share",
+        "live_status": "Live & Ready"
     },
     "SubscribeSection": {
         "desc": "Subscribe to my blog via Follow app or any standard RSS feed reader.",

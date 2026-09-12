@@ -1,10 +1,12 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import { headerLanguageMap, projectsData } from "@/lib/data"
 import { useSectionInView } from "@/lib/hooks"
 import SectionHeading from "./SectionHeading"
 import Project from "./Project"
+import ProjectPeekDrawer from "@/components/ui/project-peek-drawer"
+import { findProjectDetailByTitle, ProjectDetail } from "@/lib/projects-detail"
 import { useLocale, useTranslations } from "next-intl"
 import Link from "next/link"
 import { FaGithub } from "react-icons/fa6"
@@ -15,6 +17,17 @@ export default function Projects() {
   const { ref } = useSectionInView("Projects", 0.1)
   const activeLocale = useLocale()
   const t = useTranslations("ProjectSection")
+
+  const [selectedProject, setSelectedProject] = useState<ProjectDetail | null>(null)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  const handleOpenPeek = (title: string) => {
+    const detail = findProjectDetailByTitle(title)
+    if (detail) {
+      setSelectedProject(detail)
+      setIsDrawerOpen(true)
+    }
+  }
 
   return (
     <motion.section
@@ -37,9 +50,17 @@ export default function Projects() {
       </p>
 
       <div className="flex flex-col gap-5 sm:gap-7">
-        {projectsData.map((project, index) => (
-          <Project key={index} {...project} index={index} />
-        ))}
+        {projectsData.map((project, index) => {
+          const hasDetail = !!findProjectDetailByTitle(project.title)
+          return (
+            <Project
+              key={index}
+              {...project}
+              index={index}
+              onPeek={hasDetail ? () => handleOpenPeek(project.title) : undefined}
+            />
+          )
+        })}
       </div>
 
       <div className="flex justify-center mt-10">
@@ -53,6 +74,12 @@ export default function Projects() {
           <FiArrowUpRight className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
         </Link>
       </div>
+
+      <ProjectPeekDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        project={selectedProject}
+      />
     </motion.section>
   )
 }

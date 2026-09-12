@@ -6,7 +6,7 @@ import Image from "next/image"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { FaGithub } from "react-icons/fa6"
 import Link from "next/link"
-import { FiArrowUpRight } from "react-icons/fi"
+import { FiArrowUpRight, FiEye } from "react-icons/fi"
 import { useLocale, useTranslations } from "next-intl"
 
 interface ProjectProps {
@@ -16,9 +16,11 @@ interface ProjectProps {
   title_zh: string
   tags: string[] | readonly string[]
   imageUrl: any
+  iconUrl?: any
   projectUrl?: string
   demoUrl?: string
   index: number
+  onPeek?: () => void
 }
 
 export default function Project({
@@ -28,9 +30,11 @@ export default function Project({
   title_zh,
   tags,
   imageUrl,
+  iconUrl,
   projectUrl,
   demoUrl,
   index,
+  onPeek,
 }: ProjectProps) {
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
@@ -45,7 +49,11 @@ export default function Project({
   const isEven = index % 2 === 1
 
   const handleCardClick = () => {
-    window.open(demoUrl || projectUrl, "_blank")
+    if (onPeek) {
+      onPeek()
+    } else {
+      window.open(demoUrl || projectUrl, "_blank")
+    }
   }
 
   return (
@@ -80,9 +88,21 @@ export default function Project({
           }`}
         >
           <div className="flex flex-col">
-            <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              {activeLocale === "zh" ? title_zh : title}
-            </h3>
+            <div className="flex items-center gap-2.5">
+              {iconUrl && (
+                <div className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-xl overflow-hidden border border-gray-200/80 dark:border-gray-700/80 shrink-0 shadow-xs bg-white dark:bg-gray-800">
+                  <Image
+                    src={iconUrl}
+                    alt={activeLocale === "zh" ? title_zh : title}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              )}
+              <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                {activeLocale === "zh" ? title_zh : title}
+              </h3>
+            </div>
 
             <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-gray-600 dark:text-gray-300 whitespace-pre-line">
               {activeLocale === "zh" ? desc_zh : description}
@@ -108,11 +128,26 @@ export default function Project({
                 <Link
                   href={projectUrl}
                   target="_blank"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 sm:py-1.5 rounded-xl text-xs font-medium bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-200/60 dark:border-gray-700/60 active:scale-95 transition-all"
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-2 sm:py-1.5 rounded-xl text-xs font-medium transition-all ${
+                    !demoUrl
+                      ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 shadow-xs active:scale-95"
+                      : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-200/60 dark:border-gray-700/60 active:scale-95"
+                  }`}
                 >
                   <FaGithub className="w-3.5 h-3.5" />
                   <span>{t("code")}</span>
                 </Link>
+              )}
+
+              {onPeek && (
+                <button
+                  type="button"
+                  onClick={onPeek}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 sm:py-1.5 rounded-xl text-xs font-medium bg-gray-100/80 hover:bg-gray-200/90 dark:bg-gray-800/80 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-200/60 dark:border-gray-700/60 active:scale-95 transition-all"
+                >
+                  <FiEye className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" />
+                  <span>{t("peek")}</span>
+                </button>
               )}
             </div>
           </div>

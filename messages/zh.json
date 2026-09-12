@@ -97,7 +97,22 @@
         "subtitle": "精选开源项目与实践作品",
         "view_all": "查看所有项目",
         "code": "查看代码",
-        "visit": "在线演示"
+        "visit": "在线演示",
+        "peek": "详情",
+        "peek_tooltip": "查看项目全景截图与架构解析",
+        "gallery_tab": "概览画廊",
+        "arch_tab": "技术架构",
+        "sandbox_tab": "在线体验",
+        "features_title": "核心特性",
+        "specs_title": "技术规格",
+        "architecture_title": "系统架构解析",
+        "close": "关闭",
+        "open_external": "在线访问",
+        "view_code": "查看源码",
+        "slide_hint": "支持左右滑动切换 · ESC 关闭",
+        "copied": "已复制项目链接",
+        "copy_link": "分享",
+        "live_status": "实机在线"
     },
     "SubscribeSection": {
         "desc": "支持通过 Follow 信息流或任意标准 RSS 阅读器订阅我的博客内容。",

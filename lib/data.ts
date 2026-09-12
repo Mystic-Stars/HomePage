@@ -1,8 +1,11 @@
 import React from "react";
 import { FaReact } from "react-icons/fa";
 import GHS from "@/public/GHS.png";
+import GHSIcon from "@/public/ghs-icon.png";
 import Axolotl from "@/public/Axolotl.webp";
+import AxolotlIcon from "@/public/axolotl-icon.png";
 import Coverly from "@/public/Coverly.png";
+import CoverlyIcon from "@/public/coverly-icon.png";
 import { CgWorkAlt } from "react-icons/cg";
 import { LuGraduationCap } from "react-icons/lu";
 import { FaRss } from "react-icons/fa6";
@@ -65,6 +68,7 @@ export const projectsData = [
         desc_zh: "开源，跨平台的下一代启动器\n你的最后一款启动器",
         tags: ["Minecraft", "Tauri", "Rust"],
         imageUrl: Axolotl,
+        iconUrl: AxolotlIcon,
         projectUrl: 'https://github.com/Mystic-Stars/Axolotl',
         demoUrl: 'https://axlmc.org',
     },
@@ -76,6 +80,7 @@ export const projectsData = [
         desc_zh: "轻巧、优雅的封面设计工具\n让封面创作更简单",
         tags: ["Next.js", "React", "Tailwind CSS"],
         imageUrl: Coverly,
+        iconUrl: CoverlyIcon,
         projectUrl: 'https://github.com/Mystic-Stars/Coverly',
         demoUrl: 'https://cover.mysticstars.cn/',
     },
@@ -87,6 +92,7 @@ export const projectsData = [
         desc_zh: "GHS 官网",
         tags: ["Html", "Css", "Javascript"],
         imageUrl: GHS,
+        iconUrl: GHSIcon,
         demoUrl: 'https://www.ghs.red',
     },
 ]
